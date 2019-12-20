@@ -10,7 +10,7 @@ const AppNavigator = createStackNavigator(
     Login: {
       screen: Login,
       navigationOptions: () => ({
-        // headerTransparent: true,
+        headerTransparent: true,
         headerBackTitle: null
       })
     },
