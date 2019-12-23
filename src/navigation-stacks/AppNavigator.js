@@ -17,7 +17,7 @@ const AppNavigator = createStackNavigator(
     Register: {
       screen: Register,
       navigationOptions: () => ({
-        // headerTransparent: true,
+        headerTransparent: true,
         headerBackTitle: null
       })
     },

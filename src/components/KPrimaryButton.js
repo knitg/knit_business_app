@@ -14,16 +14,12 @@ const KPrimaryButton = (props) => {
 const styles = StyleSheet.create({
     button: {
         display: 'flex',
-        height: 50,
+        padding: 20,
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#004796',
-        shadowColor: '#2AC062',
-        shadowOpacity: 0.4,
-        shadowOffset: { height: 10, width: 0 },
-        shadowRadius: 20,
-        borderRadius:50
+        shadowColor: '#2AC062'
     },
 
     text: {
