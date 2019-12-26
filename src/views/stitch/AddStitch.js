@@ -16,23 +16,18 @@ import { TouchableOpacity } from "react-native-gesture-handler";
  * url, username, password validations here
  */
 const validationSchema = yup.object().shape({
-  email: yup
+  stitch: yup
     .string()
     .required()
-    .label("Email")
+    .label("Stitch")
     .min(2, "Seems a bit short")
     .max(10, "We prefer insecure system"),
-  phone: yup
+  description: yup
     .string()
     .required()
-    .label("Phone Number")
-    .min(9, "Phone number should be atleast 10 characters"),
-  password: yup
-    .string()
-    .required()
-    .label("Password")
-    .min(2, "Seems a bit short")
-    .max(10, "We prefer insecure system")
+    .label("Description")
+    .min(2, "Description should be atleast 2 characters"),
+   
 });
 
 
@@ -81,12 +76,12 @@ const AddStitch = (props) => {
                     <KTextInput
                       placeholder="Stitch"
                       formikProps={formikProps}
-                      formikKey="phone"
+                      formikKey="stitch"
                     />
                     <KTextInput
                       placeholder="Description"
                       formikProps={formikProps}
-                      formikKey="username"
+                      formikKey="description"
                     />
                     <View style={{display: 'flex', flexDirection:'row', justifyContent:'center', alignContent:'center'}}>
                       <View style={{ flex: 1, alignSelf: 'center',flexDirection: 'row' }}>
