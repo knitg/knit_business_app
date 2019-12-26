@@ -6,22 +6,36 @@ import {
   FontAwesome,
   MaterialCommunityIcons,
   MaterialIcons
-} from "@expo/vector-icons";
-import Dashboard from "../views/Dashboard";
+} from "@expo/vector-icons"; 
 import Profile from "../views/Profile";
 import User from "../views/user/User";
 import Vendor from "../views/Vendor";
+import StitchView from "../views/StitchView";
+import UserView from "../views/UserView";
 
 console.disableYellowBox = true;
 
-const MainTabStack = createBottomTabNavigator({
-  Dashboard: {
-    screen: Dashboard,
+const MainTabStack = createBottomTabNavigator({ 
+  Stitch: {
+    screen: StitchView,
     navigationOptions: {
-      tabBarLabel: "Dashboard",
+      tabBarLabel: "Stitch",
       tabBarIcon: () => (
-        <MaterialCommunityIcons
-          name="desktop-mac-dashboard"
+        <MaterialIcons
+          name="nfc"
+          size={30}
+          color="#0564A4"
+        />
+      )
+    }
+  },
+  User: {
+    screen: UserView,
+    navigationOptions: {
+      tabBarLabel: "User",
+      tabBarIcon: () => (
+        <FontAwesome
+          name="users"
           size={30}
           color="#0564A4"
         />

@@ -52,7 +52,7 @@ const Register = (props) => {
                         }}
                         onSubmit={(values, actions) => {
                             setTimeout(() => {
-                                props.navigation.navigate({ routeName: 'Dashboard' })
+                                props.navigation.navigate({ routeName: 'Stitch' })
                             }, 1000);
                         }}
                         validationSchema={validationSchema}
