@@ -29,7 +29,7 @@ const AppNavigator = createStackNavigator(
     }
   },
   {
-    initialRouteName: "Login",
+    initialRouteName: "Layout",
     headerMode: "screen",
     mode: "modal",
     defaultNavigationOptions: {

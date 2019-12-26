@@ -22,8 +22,8 @@ const ProductCard = props => {
       <CardItem>
         <Left>
           <Body>
-            <Text>NativeBase</Text>
-            <Text note>GeekyAnts</Text>
+            <Text>Blouse</Text>
+            <Text note>Blouse description</Text>
           </Body>
         </Left>
         <Right>
@@ -39,22 +39,7 @@ const ProductCard = props => {
           style={{ height: 200, width: null, flex: 1 }}
         />
       </CardItem>
-      <CardItem>
-        <Left>
-          <Button transparent>
-            <Icon active name="chatbubbles" />
-            <Text>3</Text>
-          </Button>
-          <Button transparent>
-            <Icon name="thumbs-up" />
-            <Text>12</Text>
-          </Button>
-        </Left>
- 
-        <Right>
-          <Text>11h ago</Text>
-        </Right>
-      </CardItem>
+     
     </Card>
   );
 };

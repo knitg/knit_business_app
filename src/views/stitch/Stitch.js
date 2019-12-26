@@ -15,14 +15,16 @@ function Stitch(props) {
   const [isAddNewVisible, setIsAddNewVisible] = useState(false);
 
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView>
+    <Container style={{ flex: 1 }}> 
         {isAddNewVisible ? (
-          <AddStitch></AddStitch>
+          <View style={{ height:'100%', borderWidth:1, borderColor:'yellow', borderStyle:'solid'}}>
+            <AddStitch></AddStitch>
+          </View>
         ) : (
-          <ProductCard></ProductCard>
+          <ScrollView>
+              <ProductCard></ProductCard>              
+          </ScrollView>
         )}
-      </ScrollView>
       <Fab
         style={{ flex: 1 }}
         active={active}
@@ -41,7 +43,7 @@ function Stitch(props) {
         )}
         {props.children}
       </Fab>
-    </View>
+    </Container>
   );
 }
 const styles = StyleSheet.create({

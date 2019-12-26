@@ -14,7 +14,7 @@ export default function App() {
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
     const fetchFonts = async () => {
-      Font.loadAsync({
+      await Font.loadAsync({
         Roboto: require('native-base/Fonts/Roboto.ttf'),
         Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
         ...Ionicons.font,
