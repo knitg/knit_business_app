@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text } from "native-base";
-import { ScrollView } from "react-native-gesture-handler"; 
+import { ScrollView } from "react-native-gesture-handler";
 
-function User(props) {
+function Master(props) {
   return (
     <ScrollView>
       <Text>Coming sooon.....</Text>
@@ -10,4 +10,4 @@ function User(props) {
   );
 }
 
-export default User;
+export default Master;
