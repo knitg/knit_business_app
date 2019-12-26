@@ -38,7 +38,7 @@ const Login = (props) => {
         <SafeAreaView style={{ marginTop: 50 }}>
             <View style={styles.container}>
                 <View style={styles.redbox} >
-                    <Image source={require('../assets/images/logo.jpg')} style={{ width: 180, height: 180 }} />
+                    {/* <Image source={require('../assets/images/logo.jpg')} style={{ width: 180, height: 180 }} /> */}
                     
                 </View>
                 <View style={styles.formbox} >
