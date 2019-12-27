@@ -48,6 +48,7 @@ const AddStitch = (props) => {
       return obj.uri !== url;
     }));
   }
+  console.log("props >>> ", props);
   return (
     <Container style={{ flex: 1 }}>
       {cameraOpen ?
@@ -55,14 +56,13 @@ const AddStitch = (props) => {
         : (
           <View style={styles.container}>
             <View style={styles.heading} >
-              <H2>ADD STITCH</H2>
+              <H2>{props.isEditMode ? 'UPDATE' : 'ADD'} STITCH</H2>
             </View>
             <View style={styles.formbox} >
               <Formik
                 initialValues={{
-                  phone: "0000000000",
-                  username: "admin",
-                  password: "admin"
+                  stitch: props.editData ? props.editData.stype : '', 
+                  description: props.editData ? props.editData.description : ''
                 }}
                 onSubmit={(values, actions) => {
                   setTimeout(() => {
@@ -108,6 +108,17 @@ const AddStitch = (props) => {
                         marginHorizontal: 15,
                         paddingVertical: 20,
                         marginTop: 20
+                      }}
+                    />
+                    
+                    <KPrimaryButton
+                      title="CANCEL"
+                      onPress={props.cancelClick}
+                      style={{
+                        marginHorizontal: 15,
+                        paddingVertical: 20,
+                        marginTop: 20,
+                        backgroundColor: '#F00'
                       }}
                     />
                   </View>

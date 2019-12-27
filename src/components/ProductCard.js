@@ -12,8 +12,11 @@ import {
   Icon,
   Left,
   Body,
-  Right
-} from "native-base";
+  Right,
+  View
+} from "native-base"; 
+
+import { Ionicons, Octicons, AntDesign, FontAwesome } from "@expo/vector-icons";
 
 const ProductCard = props => {
   const { title, description, price } = props;
@@ -22,15 +25,17 @@ const ProductCard = props => {
       <CardItem>
         <Left>
           <Body>
-            <Text>Blouse</Text>
-            <Text note>Blouse description</Text>
+            <Text>{props.type.stype}</Text>
+            <Text note>{props.type.description}</Text>
           </Body>
-        </Left>
+        </Left> 
         <Right>
-          <Text>
-            {" "}
-            {"\u20B9"} <Text style={{ fontSize: 18 }}>140</Text>
-          </Text>
+          <View style={{flex: 1, flexDirection:'row', justifyContent:'flex-end'}}>
+            <FontAwesome style={{padding:10, alignSelf:'center'}} name="edit" size={32} color="grey"
+            onPress={props.editIconClick}
+            />
+            <FontAwesome style={{padding:10, alignSelf:'center'}} name="trash" size={32} color="red" /> 
+          </View>
         </Right>
       </CardItem>
       <CardItem cardBody>
@@ -38,8 +43,9 @@ const ProductCard = props => {
           source={{ uri: "https://picsum.photos/200/300" }}
           style={{ height: 200, width: null, flex: 1 }}
         />
+        {/* <ImageSwiper></ImageSwiper> */}
       </CardItem>
-     
+
     </Card>
   );
 };
