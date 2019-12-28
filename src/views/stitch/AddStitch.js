@@ -56,7 +56,6 @@ const AddStitch = props => {
       ) : (
           <View style={styles.container}>
             <H2 style={styles.heading}>{props.isEditMode ? "UPDATE" : "ADD"} STITCH</H2>            
-            <View>
               <Formik
                 initialValues={{
                   stype: "",
@@ -94,8 +93,7 @@ const AddStitch = props => {
                   </View>
                 )}
               </Formik>
-            </View>
-          </View>
+            </View> 
         )}
     </Container>
   );
