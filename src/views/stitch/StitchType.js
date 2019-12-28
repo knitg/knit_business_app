@@ -8,10 +8,7 @@ function StitchType(props) {
   return (
     <View style={{flex: 1}}>
       <ScrollView>
-        <ProductCard></ProductCard>
-        <ProductCard></ProductCard>
-        <ProductCard></ProductCard>
-        <ProductCard></ProductCard>
+        <Text>COMING SOON</Text>
       </ScrollView>
       <KFab></KFab>
     </View>

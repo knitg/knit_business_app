@@ -34,7 +34,7 @@ const ScreenByCode = code => {
 const Vendor = (props) => {
   return (
     <View style={{ flex: 1 }}>
-      <HeaderToolBar showBack={true} showSearch={true}></HeaderToolBar>
+      <HeaderToolBar showBack={true} showSearch={true}  title="Vendors"></HeaderToolBar>
       <KTabs>
         {tabs.map((tab, index) => (
           <Tab key={index} heading={tab.type}>

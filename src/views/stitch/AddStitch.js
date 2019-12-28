@@ -1,22 +1,112 @@
-import React, { useReducer, useState } from "react";
-import { SafeAreaView } from "react-navigation";
+import React, { useState } from "react";
 
 import { Formik } from "formik";
 import * as yup from "yup";
 import KPrimaryButton from "../../components/KPrimaryButton";
-import { H2, View, H3, ListItem, CheckBox, Body, Text, Container, Thumbnail, Content } from "native-base";
-import { Image, StyleSheet } from 'react-native';
+import { H2, View, Container } from "native-base";
+import { StyleSheet } from "react-native";
 import KTextInput from "../../components/KTextInput";
-import CameraScreen from '../../components/Camera'
+import CameraScreen from "../../components/Camera";
 
-import { Ionicons, Octicons, AntDesign, FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import CameraThumb from "../../components/CameraThumb";
+import { addStitchAction } from "../../redux_store/actions/stitch/add-stitch.actions";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+
+const AddStitch = props => {
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const [images, setImages] = useState([]);
+  /**
+   * Handle picture after taken from camera
+   */
+  const handlePicture = data => {
+    setImages([...images, data]);
+    setCameraOpen(false);
+    console.log("HANDLE PICTURE ", data, images);
+  };
+
+ /**
+   * Onsubmit button click
+   */
+  const onSubmitStitch = values => {
+    console.log("submit clickedddddd INSIDE");
+
+    let formData = new FormData();
+    formData.append("description", values.description);
+    formData.append("stype", values.stype);
+    formData.append("code", values.stype.replace(/\s/g, ""));
+
+    images.forEach((image, index) => {
+      formData.append("image" + index, {
+        type: "image/jpg",
+        uri: image.uri,
+        name: values.stitch + "_" + index + ".jpg"
+      });
+    });
+    props.addStitch(formData);
+  };
+ 
+  return (
+    <Container style={{ flex: 1 }}>
+      {cameraOpen ? (
+        <CameraScreen
+          cameraPictureUpdate={handlePicture}
+          closeCamera={() => setCameraOpen(false)}
+        ></CameraScreen>
+      ) : (
+          <View style={styles.container}>
+            <H2 style={styles.heading}>{props.isEditMode ? "UPDATE" : "ADD"} STITCH</H2>            
+            <View>
+              <Formik
+                initialValues={{
+                  stype: "",
+                  description: ""
+                }}
+                onSubmit={(values, actions) => {
+                  console.log("submit clickedddddd");
+                  onSubmitStitch(values, actions);
+                }}
+                validationSchema={validationSchema}
+              >
+                {formikProps => (
+                  <View>
+                    <KTextInput
+                      placeholder="Stitch"
+                      formikProps={formikProps}
+                      formikKey="stype"
+                    />
+                    <KTextInput
+                      placeholder="Description"
+                      formikProps={formikProps}
+                      formikKey="description"
+                    />
+                    <CameraThumb
+                      images={images}
+                      cameraTriggered={() => setCameraOpen(true)}
+                      popImage={url =>
+                        setImages(images.filter(obj => obj.uri !== url))
+                      }
+                    ></CameraThumb>
+                    <View style={styles.btn_container}>
+                      <KPrimaryButton title="ADD" onPress={formikProps.handleSubmit} style={styles.button} />
+                      <KPrimaryButton title="CANCEL" onPress={props.cancelClick} style={[styles.button, styles.btn_red]} />
+                    </View>
+                  </View>
+                )}
+              </Formik>
+            </View>
+          </View>
+        )}
+    </Container>
+  );
+};
+
 /**
  * Validation schema
- * url, username, password validations here
+ * stitch, description validations here
  */
 const validationSchema = yup.object().shape({
-  stitch: yup
+  stype: yup
     .string()
     .required()
     .label("Stitch")
@@ -26,125 +116,50 @@ const validationSchema = yup.object().shape({
     .string()
     .required()
     .label("Description")
-    .min(2, "Description should be atleast 2 characters"),
-   
+    .min(2, "Description should be atleast 2 characters")
+});
+
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    flexDirection: "column",
+    justifyContent: "center",
+    fontFamily: "Roboto_medium"
+  },
+  heading: {
+    width: "100%",
+    alignItems: "center",
+    padding: 20
+  }, 
+  btn_container: {
+    flexDirection: 'row',
+    padding: 5
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 5,
+    paddingVertical: 20,
+    marginTop: 10,
+  },
+  btn_red: {
+    backgroundColor: 'red'
+  }
 });
 
 
-const AddStitch = (props) => {
-  const [cameraOpen, setCameraOpen] = useState(false)
-  const [images, setImages] = useState([])
-
-  const handlePicture = (data) => {
-    setImages([...images, data]);
-    setCameraOpen(false)
-    console.log("HANDLE PICTURE ", data, images);
+const mapStateToProps = ({stitch}) => {
+  console.log("MAP STATE >>>> ", stitch);
+  return {
+    stitch_id: stitch.stitch_id
   }
-  const closeCamera = () => {
-    setCameraOpen(false)
-  }
-  const popImage = (url) => {
-    setImages(images.filter(function (obj) {
-      return obj.uri !== url;
-    }));
-  }
-  console.log("props >>> ", props);
-  return (
-    <Container style={{ flex: 1 }}>
-      {cameraOpen ?
-        <CameraScreen cameraPictureUpdate={handlePicture} closeCamera={closeCamera}></CameraScreen>
-        : (
-          <View style={styles.container}>
-            <View style={styles.heading} >
-              <H2>{props.isEditMode ? 'UPDATE' : 'ADD'} STITCH</H2>
-            </View>
-            <View style={styles.formbox} >
-              <Formik
-                initialValues={{
-                  stitch: props.editData ? props.editData.stype : '', 
-                  description: props.editData ? props.editData.description : ''
-                }}
-                onSubmit={(values, actions) => {
-                  setTimeout(() => {
-                    props.navigation.navigate({ routeName: 'Stitch' })
-                  }, 1000);
-                }}
-                validationSchema={validationSchema}
-              >
-                {formikProps => (
-                  <View>
-                    <KTextInput
-                      placeholder="Stitch"
-                      formikProps={formikProps}
-                      formikKey="stitch"
-                    />
-                    <KTextInput
-                      placeholder="Description"
-                      formikProps={formikProps}
-                      formikKey="description"
-                    />
-                    <View style={{display: 'flex', flexDirection:'row', justifyContent:'center', alignContent:'center'}}>
-                      <View style={{ flex: 1, alignSelf: 'center',flexDirection: 'row' }}>
-                        {images.map((image, index) => (
-                          <TouchableOpacity style={{ padding: 10, textAlign: 'right' }}>
-                            <MaterialCommunityIcons name="close" size={40} color="#b2b2b2"
-                              onPress={() => { popImage(image.uri) }}
-                            ></MaterialCommunityIcons>
-                            <Thumbnail large source={{ uri: image.uri }} />
-                          </TouchableOpacity>
-                        ))}
-                      </View>
-                      <View style={{flex:1, alignItems:'flex-end', justifyContent:'flex-end', paddingRight:20}}>
-                      <TouchableOpacity 
-                        onPress={() => setCameraOpen(true)}>
-                        <FontAwesome name="camera" size={80} color="#b2b2b2"></FontAwesome>
-                      </TouchableOpacity>
-                      </View>
-                    </View>
-                    <KPrimaryButton
-                      title="ADD"
-                      onPress={formikProps.handleSubmit}
-                      style={{
-                        marginHorizontal: 15,
-                        paddingVertical: 20,
-                        marginTop: 20
-                      }}
-                    />
-                    
-                    <KPrimaryButton
-                      title="CANCEL"
-                      onPress={props.cancelClick}
-                      style={{
-                        marginHorizontal: 15,
-                        paddingVertical: 20,
-                        marginTop: 20,
-                        backgroundColor: '#F00'
-                      }}
-                    />
-                  </View>
-                )}
-              </Formik>
-            </View>
-          </View>
-        )
-      }
-    </Container>
+};
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    {
+      addStitch: addStitchAction
+    },
+    dispatch
   );
-}
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    fontFamily: 'Roboto_medium'
-  },
-  heading: {
-    width: '100%',
-    alignItems: 'center',
-    padding:20
-  },
-  formbox: {
-    width: '100%',
-  },
-})
-export default AddStitch;
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddStitch);

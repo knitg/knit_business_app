@@ -26,7 +26,7 @@ const ScreenByCode = code => {
 const UserView = (props) => {
   return (
     <View style={{ flex: 1 }}>
-      <HeaderToolBar showBack={true} showSearch={true}></HeaderToolBar>
+      <HeaderToolBar showBack={true} showSearch={true} title="User"></HeaderToolBar>
       <KTabs>
         {tabs.map((tab, index) => (
           <Tab key={index} heading={tab.type}>

@@ -6,8 +6,7 @@ import ProductCard from "../../components/ProductCard";
 function StitchTypeDesign(props) {
   return (
     <ScrollView>
-      <ProductCard></ProductCard>
-      <ProductCard></ProductCard>
+      <Text> STITCH TYPE DESIGNS COMING SOON</Text>
     </ScrollView>
   );
 }

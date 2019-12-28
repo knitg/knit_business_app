@@ -26,7 +26,7 @@ const HeaderToolBar = props => {
           ) : null}
         </Left>
         <Body>
-          <Title>Header</Title>
+            <Title>{props.title}</Title>
         </Body>
         <Right>
           {showSearch ? (
