@@ -1,5 +1,5 @@
 import React from "react";
-import { Image } from "react-native";
+import { Image, TouchableHighlight } from "react-native";
 import {
   Container,
   Header,
@@ -14,7 +14,7 @@ import {
   Body,
   Right,
   View
-} from "native-base"; 
+} from "native-base";
 
 import { Ionicons, Octicons, AntDesign, FontAwesome } from "@expo/vector-icons";
 
@@ -28,13 +28,17 @@ const ProductCard = props => {
             <Text>{props.type.stype}</Text>
             <Text note>{props.type.description}</Text>
           </Body>
-        </Left> 
+        </Left>
         <Right>
-          <View style={{flex: 1, flexDirection:'row', justifyContent:'flex-end'}}>
-            <FontAwesome style={{padding:10, alignSelf:'center'}} name="edit" size={32} color="grey"
-            onPress={props.editIconClick}
-            />
-            <FontAwesome style={{padding:10, alignSelf:'center'}} name="trash" size={32} color="red" /> 
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <TouchableHighlight onPress={props.editIconClick}>
+              <FontAwesome style={{ padding: 10, alignSelf: 'center' }} name="edit" size={32} color="grey"
+                onPress={props.editIconClick}
+              />
+            </TouchableHighlight>
+            <TouchableHighlight onPress={props.trashIconClick}>
+              <FontAwesome style={{ padding: 10, alignSelf: 'center' }} name="trash" size={32} color="red" />
+            </TouchableHighlight>
           </View>
         </Right>
       </CardItem>
