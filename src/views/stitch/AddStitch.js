@@ -14,6 +14,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import KImagePicker from "../../components/ImagePicker";
 import * as ImageManipulator from 'expo-image-manipulator';
+import { updateStitchAction } from "../../redux_store/actions/stitch/update-stitch.actions";
 
 
 const AddStitch = props => {
@@ -26,13 +27,11 @@ const AddStitch = props => {
    */
   const onSubmitStitch = values => {
     console.log("submit clickedddddd INSIDE");
-
-
     let formData = new FormData();
     formData.append("description", values.description);
     formData.append("stype", values.stype);
     formData.append("code", values.stype.replace(/\s/g, ""));
-    
+    console.log("IMAGES ", images);
     images.forEach((image, index) => {
       const fetchResizedImg = async () => {
         return await ImageManipulator.manipulateAsync(
@@ -47,7 +46,13 @@ const AddStitch = props => {
           uri: res.uri,
           name: values.stype+"_"+ new Date().getTime() + "_" + index + ".jpg"
         });
-        props.addStitch(formData);
+        if(props.selectedStitchItem) {
+          console.log("UPDATE SECTION ", props.selectedStitchItem);
+          props.updateStitch(props.selectedStitchItem.id, formData);
+        }else{
+          console.log("ADD SECTION ", props.selectedStitchItem);
+          props.addStitch(formData);
+        }
         props.cancelClick();
       });
       
@@ -157,13 +162,15 @@ const styles = StyleSheet.create({
 const mapStateToProps = ({stitch}) => {
   console.log("MAP STATE >>>> ", stitch);
   return {
-    stitch_id: stitch.stitch_id
+    stitch_id: stitch.stitch_id,
+    update_stitch_id: stitch.update_stitch_id
   }
 };
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
     {
-      addStitch: addStitchAction
+      addStitch: addStitchAction,
+      updateStitch: updateStitchAction
     },
     dispatch
   );

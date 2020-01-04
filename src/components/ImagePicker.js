@@ -32,6 +32,7 @@ export default class KImagePicker extends React.Component {
       temp.push(this.props.hasImages[0].image);
       this.setState({ images: temp });
       console.log("this.props.hasImages >> ", this.state.images);
+      this.props.onImageSelect(this.state.images);
     }
   }
   componentDidMount() {
@@ -53,8 +54,8 @@ export default class KImagePicker extends React.Component {
             justifyContent: "flex-end"
           }}
         >
-          
-          <Text style={{flex: 1, padding: 15}} >{this.props.heading ? this.props.heading : "Take picture" } </Text>
+
+          <Text style={{ flex: 1, padding: 15 }} >{this.props.heading ? this.props.heading : "Take picture"} </Text>
           <TouchableOpacity style={{ padding: 10 }} onPress={this._pickImage}>
             <MaterialIcons
               name="photo-library"
@@ -78,7 +79,7 @@ export default class KImagePicker extends React.Component {
                 style={{ padding: 10, margin: 5, position: "relative" }}
               >
                 <MaterialCommunityIcons
-                  style={{ position: "absolute", top: -22, right: 5}}
+                  style={{ position: "absolute", top: -22, right: 5 }}
                   name="close-box"
                   size={35}
                   color="#333333"
