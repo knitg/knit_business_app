@@ -13,18 +13,13 @@ import { addStitchAction } from "../../redux_store/actions/stitch/add-stitch.act
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import KImagePicker from "../../components/ImagePicker";
+import * as ImageManipulator from 'expo-image-manipulator';
+
 
 const AddStitch = props => {
   const [cameraOpen, setCameraOpen] = useState(false);
   const [images, setImages] = useState([]);
-  /**
-   * Handle picture after taken from camera
-   */
-  const handlePicture = data => {
-    setImages([...images, data]);
-    setCameraOpen(false);
-    console.log("HANDLE PICTURE ", data, images);
-  };
+   
 
  /**
    * Onsubmit button click
@@ -32,20 +27,32 @@ const AddStitch = props => {
   const onSubmitStitch = values => {
     console.log("submit clickedddddd INSIDE");
 
+
     let formData = new FormData();
     formData.append("description", values.description);
     formData.append("stype", values.stype);
     formData.append("code", values.stype.replace(/\s/g, ""));
-
+    
     images.forEach((image, index) => {
-      formData.append("image" + index, {
-        type: "image/jpg",
-        uri: image.uri,
-        name: values.stitch + "_" + index + ".jpg"
+      const fetchResizedImg = async () => {
+        return await ImageManipulator.manipulateAsync(
+          image,
+          [{ resize: { width: 1024} }],
+          { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+        );
+      }
+      fetchResizedImg().then(res => { 
+        formData.append("image" + index, {
+          type: "image/jpg",
+          uri: res.uri,
+          name: values.stype+"_"+ new Date().getTime() + "_" + index + ".jpg"
+        });
+        props.addStitch(formData);
+        props.cancelClick();
       });
+      
     });
     console.log(images);
-    // props.addStitch(formData);
   };
  
   const handleImages = (imgArr) => {
@@ -58,8 +65,8 @@ const AddStitch = props => {
         <H2 style={styles.heading}>{props.isEditMode ? "UPDATE" : "ADD"} STITCH</H2>            
           <Formik
             initialValues={{
-              stype: "",
-              description: ""
+              stype: props.selectedStitchItem ? props.selectedStitchItem.stype : "",
+              description: props.selectedStitchItem ? props.selectedStitchItem.description : ""
             }}
             onSubmit={(values, actions) => {
               console.log("submit clickedddddd");
@@ -68,7 +75,7 @@ const AddStitch = props => {
             validationSchema={validationSchema}
           >
             {formikProps => (
-              <View>
+              <View style={{flex: 1}}>
                 <KTextInput
                   placeholder="Stitch"
                   formikProps={formikProps}
@@ -78,13 +85,20 @@ const AddStitch = props => {
                   placeholder="Description"
                   formikProps={formikProps}
                   formikKey="description"
-                />
-                <View style={{ flex: 1 }}>
-                    <KImagePicker onImageSelect={handleImages}></KImagePicker>
-                </View>
-                <View style={styles.btn_container}>
-                  <KPrimaryButton title="ADD" onPress={formikProps.handleSubmit} style={styles.button} />
-                  <KPrimaryButton title="CANCEL" onPress={props.cancelClick} style={[styles.button, styles.btn_red]} />
+                /> 
+                <KImagePicker hasImages={props.selectedStitchItem ? props.selectedStitchItem.images : null} onImageSelect={handleImages}></KImagePicker> 
+                <View>
+                  
+                  {props.selectedStitchItem ? (                  
+                      <View style={styles.btn_container}>
+                        <KPrimaryButton title="UPDATE" onPress={formikProps.handleSubmit} style={styles.button} />
+                        <KPrimaryButton title="CANCEL" onPress={props.cancelClick} style={[styles.button, styles.btn_red]} />
+                     </View>
+                    ) : (
+                      <View style={styles.btn_container}>
+                        <KPrimaryButton title="ADD" onPress={formikProps.handleSubmit} style={styles.button} />
+                     </View>
+                    ) }
                 </View>
               </View>
             )}
@@ -113,6 +127,7 @@ const validationSchema = yup.object().shape({
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     width: "100%",
     flexDirection: "column",
     justifyContent: "center",

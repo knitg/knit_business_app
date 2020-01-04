@@ -9,22 +9,20 @@ import { getStitchListAction } from "../../redux_store/actions/stitch/stitch-lis
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { deleteStitchAction } from "../../redux_store/actions/stitch/delete-stitch.actions";
-import KImagePicker from "../../components/ImagePicker";
 
 const Stitch = (props) => { 
   const [isAddNewVisible, setIsAddNewVisible] = useState(false);
   const [isEditEnable, setisEditEnable] = useState(false);
-  const [editData, setEditData] = useState(null)
+  const [selectedStitchItem, setSelectedStitchItem] = useState(null)
 
   useEffect(() => {
     props.getStitchList();
-  }, [props.delete_stitch_id]);
+  }, [props.delete_stitch_id, props.stitch_id]);
 
   const editIconClick = (data) => {
     setIsAddNewVisible(true);
     setisEditEnable(true);
-    console.log("DATAAAAAAA>>> ", data);
-    setEditData(data)
+    setSelectedStitchItem(data)
   }
   const trashItemClick = (id) => {
     props.deleteStitchItem(id);
@@ -34,7 +32,7 @@ const Stitch = (props) => {
   const showAddNewScreen = () => {
     setIsAddNewVisible(true);
     setisEditEnable(false);
-    setEditData(null)
+    setSelectedStitchItem(null)
   }
   const showListScreen = () => {
     setIsAddNewVisible(false);
@@ -47,18 +45,19 @@ const Stitch = (props) => {
     
         {isAddNewVisible ? (
           <View style={{ height:'100%', borderWidth:1, borderColor:'yellow', borderStyle:'solid'}}>
-            <AddStitch isEditMode={isEditEnable} editData={editData} cancelClick={showListScreen}></AddStitch>
+            <AddStitch isEditMode={isEditEnable} selectedStitchItem={selectedStitchItem} cancelClick={showListScreen}></AddStitch>
           </View>
         ) : (
-          <ScrollView> 
-            
+          <ScrollView>            
             {props.delete_stitch_id ? props.getStitchList() : null}
             {
               props.stitch_list && props.stitch_list.map((stitch, index) => {
-                  return <ProductCard key={index} type={stitch}
-                  editIconClick={() => {editIconClick(stitch)}}
-                  trashIconClick={() => {trashItemClick(stitch.id)}}
-                  ></ProductCard>
+                  return (
+                    <ProductCard key={index} type={stitch}
+                        editIconClick={() => {editIconClick(stitch)}}
+                        trashIconClick={() => {trashItemClick(stitch.id)}}
+                    ></ProductCard>
+                  )
               })
             }              
           </ScrollView>
@@ -75,7 +74,8 @@ const mapStateToProps = ({stitch}) => {
   console.log("MAP STATE >>>> ", stitch);
   return {
     stitch_list: stitch.stitchlist,
-    delete_stitch_id: stitch.delete_stitch_id
+    delete_stitch_id: stitch.delete_stitch_id,
+    stitch_id: stitch.stitch_id
   }
 };
 const mapDispatchToProps = (dispatch) => {

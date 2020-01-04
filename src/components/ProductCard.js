@@ -42,13 +42,15 @@ const ProductCard = props => {
           </View>
         </Right>
       </CardItem>
+      {props.type.images.length >= 1 ? 
       <CardItem cardBody>
         <Image
-          source={{ uri: "https://picsum.photos/200/300" }}
+          source={{ uri: props.type.images[0].image}}
           style={{ height: 200, width: null, flex: 1 }}
         />
         {/* <ImageSwiper></ImageSwiper> */}
       </CardItem>
+      : null }
 
     </Card>
   );
