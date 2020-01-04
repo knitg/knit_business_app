@@ -12,6 +12,7 @@ import CameraThumb from "../../components/CameraThumb";
 import { addStitchAction } from "../../redux_store/actions/stitch/add-stitch.actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import KImagePicker from "../../components/ImagePicker";
 
 const AddStitch = props => {
   const [cameraOpen, setCameraOpen] = useState(false);
@@ -43,59 +44,52 @@ const AddStitch = props => {
         name: values.stitch + "_" + index + ".jpg"
       });
     });
-    props.addStitch(formData);
+    console.log(images);
+    // props.addStitch(formData);
   };
  
-  return (
-    <Container style={{ flex: 1 }}>
-      {cameraOpen ? (
-        <CameraScreen
-          cameraPictureUpdate={handlePicture}
-          closeCamera={() => setCameraOpen(false)}
-        ></CameraScreen>
-      ) : (
-          <View style={styles.container}>
-            <H2 style={styles.heading}>{props.isEditMode ? "UPDATE" : "ADD"} STITCH</H2>            
-              <Formik
-                initialValues={{
-                  stype: "",
-                  description: ""
-                }}
-                onSubmit={(values, actions) => {
-                  console.log("submit clickedddddd");
-                  onSubmitStitch(values, actions);
-                }}
-                validationSchema={validationSchema}
-              >
-                {formikProps => (
-                  <View>
-                    <KTextInput
-                      placeholder="Stitch"
-                      formikProps={formikProps}
-                      formikKey="stype"
-                    />
-                    <KTextInput
-                      placeholder="Description"
-                      formikProps={formikProps}
-                      formikKey="description"
-                    />
-                    <CameraThumb
-                      images={images}
-                      cameraTriggered={() => setCameraOpen(true)}
-                      popImage={url =>
-                        setImages(images.filter(obj => obj.uri !== url))
-                      }
-                    ></CameraThumb>
-                    <View style={styles.btn_container}>
-                      <KPrimaryButton title="ADD" onPress={formikProps.handleSubmit} style={styles.button} />
-                      <KPrimaryButton title="CANCEL" onPress={props.cancelClick} style={[styles.button, styles.btn_red]} />
-                    </View>
-                  </View>
-                )}
-              </Formik>
-            </View> 
-        )}
-    </Container>
+  const handleImages = (imgArr) => {
+    console.log("HANDLE IMAGE ARRAY", imgArr);
+    setImages(imgArr);
+  }
+
+  return ( 
+      <View style={styles.container}>
+        <H2 style={styles.heading}>{props.isEditMode ? "UPDATE" : "ADD"} STITCH</H2>            
+          <Formik
+            initialValues={{
+              stype: "",
+              description: ""
+            }}
+            onSubmit={(values, actions) => {
+              console.log("submit clickedddddd");
+              onSubmitStitch(values, actions);
+            }}
+            validationSchema={validationSchema}
+          >
+            {formikProps => (
+              <View>
+                <KTextInput
+                  placeholder="Stitch"
+                  formikProps={formikProps}
+                  formikKey="stype"
+                />
+                <KTextInput
+                  placeholder="Description"
+                  formikProps={formikProps}
+                  formikKey="description"
+                />
+                <View style={{ flex: 1 }}>
+                    <KImagePicker onImageSelect={handleImages}></KImagePicker>
+                </View>
+                <View style={styles.btn_container}>
+                  <KPrimaryButton title="ADD" onPress={formikProps.handleSubmit} style={styles.button} />
+                  <KPrimaryButton title="CANCEL" onPress={props.cancelClick} style={[styles.button, styles.btn_red]} />
+                </View>
+              </View>
+            )}
+          </Formik>
+        </View>  
   );
 };
 

@@ -8,7 +8,6 @@ import {
   MaterialIcons
 } from "@expo/vector-icons"; 
 import Profile from "../views/Profile";
-import User from "../views/user/User";
 import Vendor from "../views/Vendor";
 import StitchView from "../views/StitchView";
 import UserView from "../views/UserView";
@@ -16,6 +15,7 @@ import UserView from "../views/UserView";
 console.disableYellowBox = true;
 
 const MainTabStack = createBottomTabNavigator({ 
+  
   Stitch: {
     screen: StitchView,
     navigationOptions: {

@@ -1,13 +1,13 @@
 import React, {useEffect} from "react";
 import { View, Text, Tab } from "native-base";
 import HeaderToolBar from "../components/HeaderToolBar";
-import KTabs from "../components/Tabs";
-import User from "./user/User";
-import UserType from "./user/UserType";
-import UserRole from "./user/UserRole";
+import KTabs from "../components/Tabs"; 
+import User from "./user/user-list/User";
+import UserType from "./user/user-types/UserType";
+import UserRole from "./user/user-role/UserRole";
 
 const tabs = [
-  { id: 1, type: "Add User", code: "add_user" },
+  { id: 1, type: "Users", code: "add_user" },
   { id: 2, type: "User Type", code: "user_type" },
   { id: 3, type: "User Role", code: "user_role" }
 ];

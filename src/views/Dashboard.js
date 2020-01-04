@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { View, Text, Tab } from "native-base";
 import HeaderToolBar from "../components/HeaderToolBar";
 import ProductCard from "../components/ProductCard";
@@ -8,8 +8,8 @@ import KTabs from "../components/Tabs";
 import Stitch from "./stitch/Stitch";
 import StitchTypeDesign from "./stitch/StitchTypeDesign";
 import StitchType from "./stitch/StitchType";
-import User from "./user/User";
-import UserType from "./user/UserType";
+import User from "./user/user-list/User";
+import UserType from "./user/user-types/UserType";
 import UserRole from "./user/UserRole"; 
 
 const tabs = [

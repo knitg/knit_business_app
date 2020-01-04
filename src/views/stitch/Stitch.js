@@ -9,6 +9,7 @@ import { getStitchListAction } from "../../redux_store/actions/stitch/stitch-lis
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { deleteStitchAction } from "../../redux_store/actions/stitch/delete-stitch.actions";
+import KImagePicker from "../../components/ImagePicker";
 
 const Stitch = (props) => { 
   const [isAddNewVisible, setIsAddNewVisible] = useState(false);
@@ -40,14 +41,17 @@ const Stitch = (props) => {
     setisEditEnable(false);
   }
 
+
   return (
     <Container style={{ flex: 1 }}> 
+    
         {isAddNewVisible ? (
           <View style={{ height:'100%', borderWidth:1, borderColor:'yellow', borderStyle:'solid'}}>
             <AddStitch isEditMode={isEditEnable} editData={editData} cancelClick={showListScreen}></AddStitch>
           </View>
         ) : (
           <ScrollView> 
+            
             {props.delete_stitch_id ? props.getStitchList() : null}
             {
               props.stitch_list && props.stitch_list.map((stitch, index) => {
