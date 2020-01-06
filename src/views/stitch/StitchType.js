@@ -1,9 +1,13 @@
-import React, {useState} from "react";
-import { View, Text } from "native-base";
+import React, {useState, useEffect} from "react";
+import { View, Text, Container } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
 import ProductCard from "../../components/ProductCard";
 import KFab from "../../components/KFab";
 import AddStitchType from "./AddStitchType";
+import { getStitchTypeListAction } from "../../redux_store/actions/stitch/stitch-type-list.action";
+import { bindActionCreators } from "redux"; 
+import { connect } from "react-redux";
+import { getStitchListAction } from "../../redux_store/actions/stitch/stitch-list.actions";
 
 function StitchType(props) {
   const [isAddNewVisible, setIsAddNewVisible] = useState(false);
@@ -21,19 +25,38 @@ function StitchType(props) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView>
-        {
+    <Container style={{ flex: 1 }}>
+      {
           isAddNewVisible ? (
-            <AddStitchType></AddStitchType>
-          ) : <Text>Coming soon</Text>
-        }
-      </ScrollView>
+              <Container style={{ flex: 1}}>
+                <AddStitchType></AddStitchType>
+              </Container>
+          ) : (
+            <ScrollView>
+              <Text>Coming soon</Text>
+            </ScrollView>
+            )
+        } 
       <KFab
         fabClicked={status => (status ? showListScreen() : showAddNewScreen())}
       ></KFab>
-    </View>
+    </Container>
   );
 }
 
-export default StitchType;
+const mapStateToProps = ({stitch}) => {
+  console.log("STITCH TYPE MAP STATE >>>> ", stitch);
+  return {
+    stitchTypeList: stitch.stitchtypeList
+  }
+};
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    {
+      getStitchTypeList: getStitchTypeListAction
+    },
+    dispatch
+  );
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(StitchType);

@@ -27,7 +27,7 @@ export const FETCH_STITCH_LIST = (stitch) => {
 
 export const FETCH_STITCH_LIST_ERROR = error => {
     return {
-        type: CONST_STITCH.STITCH_LIST_ERROR,
+        type: CONST_STITCH.STITCH_LIST_ERR,
         error
     };
 };

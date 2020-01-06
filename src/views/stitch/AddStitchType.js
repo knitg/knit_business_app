@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -15,6 +15,9 @@ const AddStitchType = props => {
   const [images, setImages] = useState([]);
   const [stitch, setStitch] = useState([]);
 
+  useEffect(() => {
+    console.log("INSID EUSE EFFFF", props.stitchList)
+  }, []);
   /**
    * Onsubmit button click
    */
@@ -41,12 +44,6 @@ const AddStitchType = props => {
     console.log("HANDLE IMAGE ARRAY", imgArr);
     setImages(imgArr);
   };
-  
-  const onValueChange = (value) => {
-    this.setState({
-      selected: value
-    });
-  }
 
   return (
     <View style={styles.container}>
@@ -69,17 +66,14 @@ const AddStitchType = props => {
             <Picker
               note
               mode="dropdown"
-              style={{ flex: 1, padding:10, margin:20 }}
+              style={{ flex: 1, padding:5, marginHorizontal:10, marginVertical:0, borderWidth:1, borderColor:'red', borderStyle:'solid' }}
               selectedValue={stitch}
               onValueChange={(val) => setStitch(val)}
             >
-              <Picker.Item label="Wallet" value="key0" />
-              <Picker.Item label="ATM Card" value="key1" />
-              <Picker.Item label="Debit Card" value="key2" />
-              <Picker.Item label="Credit Card" value="key3" />
-              <Picker.Item label="Net Banking" value="key4" />
+              {props.stitchList.length >= 1 && props.stitchList.map((stitch, i) => {
+                return <Picker.Item key={i} label={stitch.stype} value={stitch.code} />
+              })}
             </Picker>
-        <Text>{stitch}</Text>
             <KTextInput
               placeholder="Stitch"
               formikProps={formikProps}
@@ -153,8 +147,9 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ stitch }) => {
-  console.log("MAP STATE >>>> ", stitch);
-  return {
+  console.log("ADD STITCH >>> <<<< MAP STATE >>>> ", stitch);
+  return {    
+    stitchList : stitch.stitchlist,
     stitch_id: stitch.stitch_id
   };
 };

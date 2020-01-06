@@ -103,12 +103,14 @@ export default class KImagePicker extends React.Component {
   }
 
   getPermissionAsync = async () => {
-    if (Constants.platform.ios) {
+    // if (Constants.platform.ios) {
+      const cameraStatus = await Permissions.askAsync(Permissions.CAMERA);
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status !== "granted") {
-        alert("Sorry, we need camera roll permissions to make this work!");
+      console.log("cameraStatus >>>>> ", cameraStatus);
+      if (status !== "granted" && cameraStatus.status !== 'granted' ) {
+        alert("Sorry, we need camera & camera roll permissions to make this work!");
       }
-    }
+    // }
   };
   /** Remove image from an array */
   popImage = img => {
@@ -126,6 +128,7 @@ export default class KImagePicker extends React.Component {
       allowsMultipleSelection: true,
       allowsEditing: true,
       aspect: [4, 3],
+      exif: true,
       quality: 0.3
     });
     if (!result.cancelled) {
@@ -143,6 +146,7 @@ export default class KImagePicker extends React.Component {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
+      exif: true,
       quality: 0.3
     });
     if (!result.cancelled) {
