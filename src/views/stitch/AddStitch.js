@@ -52,6 +52,7 @@ const AddStitch = props => {
         });
         console.log("ENNNNNNNNNDDDD >>>> ", result);
       });
+      saveOrUpdateStitch(formData);
     } else {
       saveOrUpdateStitch(formData);
     }

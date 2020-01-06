@@ -7,13 +7,28 @@ import AddStitchType from "./AddStitchType";
 import { getStitchTypeListAction } from "../../redux_store/actions/stitch/stitch-type-list.action";
 import { bindActionCreators } from "redux"; 
 import { connect } from "react-redux";
-import { getStitchListAction } from "../../redux_store/actions/stitch/stitch-list.actions";
 
 function StitchType(props) {
   const [isAddNewVisible, setIsAddNewVisible] = useState(false);
   const [isEditEnable, setisEditEnable] = useState(false);
   const [editData, setEditData] = useState(null);
+  const [selectedStitchItem, setSelectedStitchItem] = useState(null)
 
+  useEffect(() => {
+    props.getStitchTypeList();
+    console.log(props.stitchTypeList)
+  }, [props.stitch_type_id]);
+
+
+  const editIconClick = (data) => {
+    setIsAddNewVisible(true);
+    setisEditEnable(true);
+    setSelectedStitchItem(data)
+  }
+  const trashItemClick = (id) => {
+    props.deleteStitchItem(id);
+    props.getStitchList();
+  }
   const showAddNewScreen = () => {
     setIsAddNewVisible(true);
     setisEditEnable(false);
@@ -28,12 +43,21 @@ function StitchType(props) {
     <Container style={{ flex: 1 }}>
       {
           isAddNewVisible ? (
-              <Container style={{ flex: 1}}>
-                <AddStitchType></AddStitchType>
-              </Container>
+              <View style={{ flex: 1}}>
+                <AddStitchType  cancelClick={showListScreen}></AddStitchType>
+              </View>
           ) : (
-            <ScrollView>
-              <Text>Coming soon</Text>
+            <ScrollView>            
+              {
+                props.stitchTypeList && props.stitchTypeList.map((stitchtype, index) => {
+                    return (
+                      <ProductCard key={index} type={stitchtype}
+                          editIconClick={() => {editIconClick(stitchtype)}}
+                          trashIconClick={() => {trashItemClick(stitchtype.id)}}
+                      ></ProductCard>
+                    )
+                })
+              }              
             </ScrollView>
             )
         } 
@@ -47,7 +71,8 @@ function StitchType(props) {
 const mapStateToProps = ({stitch}) => {
   console.log("STITCH TYPE MAP STATE >>>> ", stitch);
   return {
-    stitchTypeList: stitch.stitchtypeList
+    stitchTypeList: stitch.stitchtypeList,
+    stitch_type_id: stitch.stitch_type_id
   }
 };
 const mapDispatchToProps = (dispatch) => {
