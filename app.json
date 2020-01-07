@@ -29,6 +29,9 @@
     "android": {
       "package": "com.knitadmin.app"
     },
-    "description": ""
-  }
+    "description": "",
+    "entryPoint": "node_modules/expo/AppEntry.js"
+  },
+  "displayName": "knit_business_app",
+  "name": "knit_business_app"
 }
