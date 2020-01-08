@@ -7,8 +7,7 @@ import { H2, View, Picker, Container } from "native-base";
 import { StyleSheet, Text, ScrollView } from "react-native";
 import KTextInput from "../../components/KTextInput";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import KImagePicker from "../../components/ImagePicker";
+import { bindActionCreators } from "redux"; 
 import { addStitchTypeAction } from "../../redux_store/actions/stitch/add-stitch-type.action";
 import * as ImageManipulator from "expo-image-manipulator";
 
@@ -113,7 +112,7 @@ const AddStitchType = props => {
                   formikKey="description"
                 />
                 <View style={{height:images.length >=1 ? 300 : 100  }}>
-                    <KImagePicker onImageSelect={handleImages}></KImagePicker>
+                    
                 </View>
                 </View>
             </ScrollView>

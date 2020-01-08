@@ -12,12 +12,15 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux"; 
 import * as ImageManipulator from "expo-image-manipulator";
 import { updateStitchAction } from "../../redux_store/actions/stitch/update-stitch.actions";
-import RN_ImagePicker from "../../components/KImagePicker";
+import RN_ImagePicker from "../../components/KImagePicker"; 
 
 const AddStitch = props => {
-  const [cameraOpen, setCameraOpen] = useState(false);
-  const [images, setImages] = useState([]);
-
+  const [images, setImages] = useState([]);  
+  let formData = new FormData();
+  /**
+   * Save Or Update action triggers
+   * @param {*} formData - formData
+   */
   const saveOrUpdateStitch = formData => {
     if (props.selectedStitchItem) {
       console.log("UPDATE SECTION ", props.selectedStitchItem);
@@ -29,41 +32,44 @@ const AddStitch = props => {
     props.cancelClick();
   };
   /**
-   * Onsubmit button click
+   * Prepare Form Data here..
    */
-  const onSubmitStitch = values => {
-    console.log("submit clickedddddd INSIDE");
-    let formData = new FormData();
+  const prepareFormData = (values) => {
     formData.append("description", values.description);
     formData.append("stype", values.stype);
     formData.append("code", values.stype.replace(/\s/g, ""));
-    console.log("IMAGES ", images);
     if (images.length >= 1) {
       images.forEach( async (image, index) => {
-        const result = await imageManipulate(image);
-        console.log(result);
+        // const result = await imageManipulate(image);
+        // console.log(result);
         formData.append("image" + index, {
           type: "image/jpg",
-          uri: result.uri,
+          uri: image,
           name:
             values.stype + "_" + new Date().getTime() + "_" + index + ".jpg"
         });
-        console.log("ENNNNNNNNNDDDD >>>> ", result);
+        // console.log("ENNNNNNNNNDDDD >>>> ", result);
       });
-      saveOrUpdateStitch(formData);
-    } else {
-      saveOrUpdateStitch(formData);
     }
+  }
+  /**
+   * On submit form click here..
+   * @param {*} values 
+   */
+  const onSubmitStitch = values => {
+    console.log("submit clickedddddd INSIDE");
+    prepareFormData(values)
+    saveOrUpdateStitch(formData);
     console.log(images);
   };
-  const imageManipulate = async (image) => {
-    const imageResized = await ImageManipulator.manipulateAsync(
-      image,
-      [{ resize: { width: 1024 } }],
-      { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
-    );
-    return imageResized;
-  }
+  // const imageManipulate = async (image) => {
+  //   const imageResized = await ImageManipulator.manipulateAsync(
+  //     image,
+  //     [{ resize: { width: 1024 } }],
+  //     { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+  //   );
+  //   return imageResized;
+  // }
   const handleImages = imgArr => {
     console.log("HANDLE IMAGE ARRAY", imgArr);
     setImages(imgArr);
@@ -98,7 +104,7 @@ const AddStitch = props => {
               placeholder="Description"
               formikProps={formikProps}
               formikKey="description"
-            />
+            /> 
             <RN_ImagePicker
               hasImages={
                 props.selectedStitchItem
@@ -107,28 +113,19 @@ const AddStitch = props => {
               }
               onImageSelect={handleImages}
             ></RN_ImagePicker> 
-              {props.selectedStitchItem ? (
-                <View style={styles.btn_container}>
-                  <KPrimaryButton
-                    title="UPDATE"
-                    onPress={formikProps.handleSubmit}
-                    style={styles.button}
-                  />
-                  <KPrimaryButton
-                    title="CANCEL"
-                    onPress={props.cancelClick}
-                    style={[styles.button, styles.btn_red]}
-                  />
-                </View>
-              ) : (
-                <View style={styles.btn_container}>
-                  <KPrimaryButton
-                    title="ADD"
-                    onPress={formikProps.handleSubmit}
-                    style={styles.button}
-                  />
-                </View>
-              )}
+            <View style={styles.btn_container}>
+              <KPrimaryButton
+                title={props.selectedStitchItem ? "UPDATE" : "ADD" }
+                onPress={formikProps.handleSubmit}
+                style={styles.button}
+              />
+              {<KPrimaryButton
+                title="CANCEL"
+                onPress={props.cancelClick}
+                style={[styles.button, styles.btn_red]}
+              />}
+            </View>
+              
             </View> 
         )}
       </Formik>

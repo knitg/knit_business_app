@@ -2625,14 +2625,6 @@ expo-asset@~8.0.0:
     path-browserify "^1.0.0"
     url-parse "^1.4.4"
 
-expo-camera@~8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-8.0.0.tgz#a0caee7baf1f2013203fe6a4635125ade12ec164"
-  integrity sha512-mtP4NV2R4e+JTXUZBiA0ok4xSzTfRLxirvqJ5T7kjyozuCWUJeOhGk3hqNsBbWhwXDA+hirAge7169UB3vKfDQ==
-  dependencies:
-    lodash "^4.6.0"
-    prop-types "^15.6.0"
-
 expo-constants@~8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-8.0.0.tgz#e2c5a072dacb4263ccfc57dcb4835ca791960d48"
@@ -2663,11 +2655,6 @@ expo-image-manipulator@~8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/expo-image-manipulator/-/expo-image-manipulator-8.0.0.tgz#d7a8ba836a417f7fd1f07db5cde4eb7c0611d608"
   integrity sha512-7KaQca4szyNllM30ZAnyL7ww83/YJFDl4Yr/4/WglXAKas96WOBztsF7/CPrboEVh/LzfqtSFW0PtyYgrC2o9Q==
-
-expo-image-picker@~8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-8.0.1.tgz#bae9e0d89722de9a6e60e55f0e4291fc099abb14"
-  integrity sha512-f4KVQFZSgNiYlt8smZ9kc/gaHkJeFLhRYiSgQdOlmLOkCuX4jxtg++PjCZLSSVwMVv/DUHT0EvUzOZqJokZfdg==
 
 expo-keep-awake@~8.0.0:
   version "8.0.0"
@@ -5482,6 +5469,13 @@ react-native-action-button@^2.8.5:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-bottom-action-sheet@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-bottom-action-sheet/-/react-native-bottom-action-sheet-1.0.4.tgz#e146f5da808262fdc267905687b0b9b91507aa4f"
+  integrity sha512-gEsPNiUWO8ZECUdUFb11lG3YfiWpOm1VPmmzOFLudzzzVHwCobXljIo8IU5RVziplJcGVdWYeWuUn+aGBr/zjA==
+  dependencies:
+    react-native-vector-icons "6.6.0"
+
 react-native-dotenv@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-0.2.0.tgz#311551cb6a35a3dcfede648bded55c0e3ece579d"
@@ -5594,7 +5588,7 @@ react-native-unimodules@^0.7.0:
     unimodules-sensors-interface "~5.0.0"
     unimodules-task-manager-interface "~5.0.0"
 
-react-native-vector-icons@^6.6.0:
+react-native-vector-icons@6.6.0, react-native-vector-icons@^6.6.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-6.6.0.tgz#66cf004918eb05d90778d64bd42077c1800d481b"
   integrity sha512-MImKVx8JEvVVBnaShMr7/yTX4Y062JZMupht1T+IEgbqBj4aQeQ1z2SH4VHWKNtWtppk4kz9gYyUiMWqx6tNSw==
