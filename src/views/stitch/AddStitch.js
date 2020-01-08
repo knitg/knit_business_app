@@ -5,16 +5,14 @@ import * as yup from "yup";
 import KPrimaryButton from "../../components/KPrimaryButton";
 import { H2, View, Container } from "native-base";
 import { StyleSheet } from "react-native";
-import KTextInput from "../../components/KTextInput";
-import CameraScreen from "../../components/Camera";
-
-import CameraThumb from "../../components/CameraThumb";
+import KTextInput from "../../components/KTextInput"; 
+ 
 import { addStitchAction } from "../../redux_store/actions/stitch/add-stitch.actions";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import KImagePicker from "../../components/ImagePicker";
+import { bindActionCreators } from "redux"; 
 import * as ImageManipulator from "expo-image-manipulator";
 import { updateStitchAction } from "../../redux_store/actions/stitch/update-stitch.actions";
+import RN_ImagePicker from "../../components/KImagePicker";
 
 const AddStitch = props => {
   const [cameraOpen, setCameraOpen] = useState(false);
@@ -101,14 +99,14 @@ const AddStitch = props => {
               formikProps={formikProps}
               formikKey="description"
             />
-            <KImagePicker
+            <RN_ImagePicker
               hasImages={
                 props.selectedStitchItem
                   ? props.selectedStitchItem.images
                   : null
               }
               onImageSelect={handleImages}
-            ></KImagePicker> 
+            ></RN_ImagePicker> 
               {props.selectedStitchItem ? (
                 <View style={styles.btn_container}>
                   <KPrimaryButton
