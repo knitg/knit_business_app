@@ -16,16 +16,15 @@ const HeaderToolBar = props => {
   const { showSearch, showFavorite, showBack, showMore } = props;
   return (
     <SafeAreaView>
-      <StatusBar backgroundColor="#000" barStyle="light-content"></StatusBar>
       <Header>
+      {showBack ? (
         <Left>
-          {showBack ? (
             <Button transparent>
               <Icon name="arrow-back" />
             </Button>
-          ) : null}
         </Left>
-        <Body>
+      ) : null}
+        <Body style={{padding:15, textAlign:'center'}}>
             <Title>{props.title}</Title>
         </Body>
         <Right>

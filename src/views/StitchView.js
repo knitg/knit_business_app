@@ -26,7 +26,7 @@ const ScreenByCode = code => {
 const StitchView = (props) => {
   return (
     <View style={{ flex: 1 }}>
-      <HeaderToolBar showBack={true} showSearch={true} title="Stitch"></HeaderToolBar>
+      <HeaderToolBar showSearch={true} title="Stitch"></HeaderToolBar>
       <KTabs>
         {tabs.map((tab, index) => (
           <Tab key={index} heading={tab.type}>
