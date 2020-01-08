@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { AppLoading } from 'expo';
+import { StyleSheet, Text, View } from 'react-native'; 
 import { createAppContainer } from 'react-navigation'; 
 import AppNavigator from './src/navigation-stacks/AppNavigator';
 import * as Font from 'expo-font';
@@ -24,10 +23,7 @@ export default function App() {
     }
     fetchFonts();    
   }, []);
-
-  if (!isReady) {
-    return <AppLoading />;
-  }
+ 
   return (
     <Provider store={store}> 
       <AppContainer />
