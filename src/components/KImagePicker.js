@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Button, Image, View, TouchableOpacity } from "react-native";
-import ImagePicker from 'react-native-image-picker';
-import Constants from "expo-constants";
+import ImagePicker from 'react-native-image-picker'; 
 import * as Permissions from "expo-permissions";
 
 import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -19,7 +18,7 @@ export default class RN_ImagePicker extends React.Component {
       const temp = this.state.images;
       temp.push(this.props.hasImages[0].image);
       this.setState({ images: temp });
-      console.log("this.props.hasImages >> ", this.state.images);
+      
       this.props.onImageSelect(this.state.images);
     }
     //// CAMERA OPTIONS /////
@@ -100,15 +99,13 @@ export default class RN_ImagePicker extends React.Component {
     console.log("hi");
   }
 
-  getPermissionAsync = async () => {
-    // if (Constants.platform.ios) {
+  getPermissionAsync = async () => { 
       const cameraStatus = await Permissions.askAsync(Permissions.CAMERA);
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       console.log("cameraStatus >>>>> ", cameraStatus);
       if (status !== "granted" && cameraStatus.status !== 'granted' ) {
         alert("Sorry, we need camera & camera roll permissions to make this work!");
-      }
-    // }
+      } 
   };
   /** Remove image from an array */
   popImage = img => {
@@ -134,18 +131,26 @@ export default class RN_ImagePicker extends React.Component {
     });
    
   };
-
+  _rotate90andFlip = async (uri) => {
+    const manipResult = await ImageManipulator.manipulateAsync(
+      uri,
+      [{ crop: {originX} }],
+      { compress: 0.5, format: ImageManipulator.SaveFormat.PNG }
+    );
+    this.setState({ image: manipResult });
+  };
   pickFromCamera = () => {
     ImagePicker.launchCamera(this.options, res => {
       // this.setState({photo: 'data:image/jpeg;base64,' + res.data})
       this.setState({photo: res.uri})
       if(res.uri){
           const temp = this.state.images;
+          console.log("this.props.hasImages >> ", this.state.images);
           temp.push(res.uri);
-          this.setState({ images: temp });
+          this.setState({ images: temp });          
           if (this.props.onImageSelect) {
             this.props.onImageSelect(this.state.images);
-          }
+          }          
       }
     }); 
   };

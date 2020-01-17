@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, Container } from "native-base";
+import React, { useState, useEffect, useReducer } from "react";
+import { View, Container, Text } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
 import ProductCard from "../../components/ProductCard";
 import KFab from "../../components/KFab";
@@ -10,68 +10,76 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { deleteStitchAction } from "../../redux_store/actions/stitch/delete-stitch.actions";
 
-const Stitch = (props) => { 
-  const [isAddNewVisible, setIsAddNewVisible] = useState(false);
-  const [isEditEnable, setisEditEnable] = useState(false);
-  const [selectedStitchItem, setSelectedStitchItem] = useState(null)
-
+const Stitch = (props) => {
+  
   useEffect(() => {
     props.getStitchList();
   }, [props.delete_stitch_id, props.stitch_id]);
-
-  const editIconClick = (data) => {
-    setIsAddNewVisible(true);
-    setisEditEnable(true);
-    setSelectedStitchItem(data)
+ 
+  /** INITIAL STATE */
+  const initialState = {
+    isList: true,
+    isEdit: false,
+    isNew: false
   }
-  const trashItemClick = (id) => {
-    props.deleteStitchItem(id);
-    props.getStitchList();
-  }
+  // SelectedStitchItem data
+  const [selectedStitchItem, setSelectedStitchItem] = useState(null);
 
-  const showAddNewScreen = () => {
-    setIsAddNewVisible(true);
-    setisEditEnable(false);
-    setSelectedStitchItem(null)
+  /** USE REDUCER METHOD FOR LIST */
+  const reducer = (state, action) => {
+    switch(action.type) {
+      case 'LIST':
+        return {...state, isNew: false, isList: true, isEdit: false}
+      case 'ADD':
+        return {...state, isNew: true, isList: false, isEdit: false}
+      case 'EDIT':
+        setSelectedStitchItem(action.data)
+        props.getStitchList();
+        return {...state, isNew: false, isList: false, isEdit: true}
+      case 'DELETE':
+        props.deleteStitchItem(action.id);
+        props.getStitchList();
+        return {...state, isNew: false, isList: false, isEdit: false}
+      default:
+        return {...state, isNew: false, isList: true, isEdit: false}
+    } 
   }
-  const showListScreen = () => {
-    setIsAddNewVisible(false);
-    setisEditEnable(false);
-  }
-
-
+  const [state, dispatch] = useReducer(reducer, initialState);
+  /** Product Card map */
+  const productCard = () => {
+      if(props.stitch_list) {
+        console.log("PRODUCT CARDDDD ", props.stitch_list);
+        return props.stitch_list.map((stitch, index) => {
+              return <ProductCard key={index} type={stitch}
+                        editIconClick={() => dispatch({type: 'EDIT', data: stitch})}
+                        trashIconClick={() => dispatch({type: 'DELETE', id: stitch.id})}
+                    ></ProductCard>
+        });
+      }
+      return null;
+  };
+  
   return (
-    <Container style={{ flex: 1 }}> 
-    
-        {isAddNewVisible ? (
+    <Container style={{ flex: 1 }}>
+        {state.isNew || state.isEdit ? (
           <View style={{ height:'100%', borderWidth:1, borderColor:'yellow', borderStyle:'solid'}}>
-            <AddStitch isEditMode={isEditEnable} selectedStitchItem={selectedStitchItem} cancelClick={showListScreen}></AddStitch>
+            <AddStitch isEditMode={state.isEdit} selectedStitchItem={selectedStitchItem} cancelClick={() => dispatch({type:'LIST'})}></AddStitch>
           </View>
         ) : (
-          <ScrollView>            
+          <ScrollView> 
             {props.delete_stitch_id ? props.getStitchList() : null}
-            {
-              props.stitch_list && props.stitch_list.map((stitch, index) => {
-                  return (
-                    <ProductCard key={index} type={stitch}
-                        editIconClick={() => {editIconClick(stitch)}}
-                        trashIconClick={() => {trashItemClick(stitch.id)}}
-                    ></ProductCard>
-                  )
-              })
-            }              
+            { productCard() }              
           </ScrollView>
         )}
         {
-          (isAddNewVisible && isEditEnable) ? null : <KFab fabClicked={(status) => status ? showListScreen() : showAddNewScreen() }></KFab>
-        }      
-      
+          (state.isNew && state.isEdit) ? null : <KFab fabClicked={(status) => status ? dispatch({type: 'LIST'}) 
+          : dispatch({type: 'ADD'})}></KFab>
+        }
     </Container>
   );
 }
 
 const mapStateToProps = ({stitch}) => {
-  console.log("MAP STATE >>>> ", stitch);
   return {
     stitch_list: stitch.stitchlist,
     delete_stitch_id: stitch.delete_stitch_id,

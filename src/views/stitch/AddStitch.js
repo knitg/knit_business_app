@@ -1,18 +1,17 @@
 import React, { useState } from "react";
-
 import { Formik } from "formik";
 import * as yup from "yup";
 import KPrimaryButton from "../../components/KPrimaryButton";
-import { H2, View, Container } from "native-base";
+import { H2, View } from "native-base";
 import { StyleSheet } from "react-native";
 import KTextInput from "../../components/KTextInput"; 
  
 import { addStitchAction } from "../../redux_store/actions/stitch/add-stitch.actions";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux"; 
-import * as ImageManipulator from "expo-image-manipulator";
 import { updateStitchAction } from "../../redux_store/actions/stitch/update-stitch.actions";
-import RN_ImagePicker from "../../components/KImagePicker"; 
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";  
+import RN_ImagePicker from "../../components/KImagePicker";
+
 
 const AddStitch = props => {
   const [images, setImages] = useState([]);  
@@ -39,16 +38,14 @@ const AddStitch = props => {
     formData.append("stype", values.stype);
     formData.append("code", values.stype.replace(/\s/g, ""));
     if (images.length >= 1) {
-      images.forEach( async (image, index) => {
-        // const result = await imageManipulate(image);
-        // console.log(result);
+     
+      images.forEach( async (image, index) => { 
         formData.append("image" + index, {
           type: "image/jpg",
-          uri: image,
+          uri: image, 
           name:
             values.stype + "_" + new Date().getTime() + "_" + index + ".jpg"
-        });
-        // console.log("ENNNNNNNNNDDDD >>>> ", result);
+        }); 
       });
     }
   }
@@ -62,14 +59,7 @@ const AddStitch = props => {
     saveOrUpdateStitch(formData);
     console.log(images);
   };
-  // const imageManipulate = async (image) => {
-  //   const imageResized = await ImageManipulator.manipulateAsync(
-  //     image,
-  //     [{ resize: { width: 1024 } }],
-  //     { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
-  //   );
-  //   return imageResized;
-  // }
+   
   const handleImages = imgArr => {
     console.log("HANDLE IMAGE ARRAY", imgArr);
     setImages(imgArr);

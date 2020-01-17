@@ -19,7 +19,7 @@ import {
 import { Ionicons, Octicons, AntDesign, FontAwesome } from "@expo/vector-icons";
 
 const ProductCard = props => {
-  const { title, description, price } = props;
+  const { title, description, price } = props; 
   return (
     <Card>
       <CardItem>

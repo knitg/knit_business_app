@@ -7,8 +7,10 @@ import { CONST_STITCH } from '../../constants/stitch.constant';
  */
 export const getStitchListAction = () => {
     return (dispatch, getState) => {
+        console.log(`${API_HOST}${PRODUCT_PFX}${STITCH}`)
         return axios.get(`${API_HOST}${PRODUCT_PFX}${STITCH}`)
             .then(response => {
+                console.log(response)
                 dispatch(FETCH_STITCH_LIST(response.data))
             })
             .catch(error => {
@@ -17,7 +19,7 @@ export const getStitchListAction = () => {
             });
     }
 }
-
+ 
 export const FETCH_STITCH_LIST = (stitch) => {
     return {
         type: CONST_STITCH.STITCH_LIST,

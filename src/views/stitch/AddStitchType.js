@@ -9,7 +9,6 @@ import KTextInput from "../../components/KTextInput";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux"; 
 import { addStitchTypeAction } from "../../redux_store/actions/stitch/add-stitch-type.action";
-import * as ImageManipulator from "expo-image-manipulator";
 
 
 const AddStitchType = props => {
