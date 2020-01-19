@@ -1,10 +1,10 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
   Text,
   View
 } from 'react-native'
-import Swiper from 'react-native-swiper'
-
+import ImageView from 'react-native-image-view';
+import { SliderBox } from "react-native-image-slider-box";
 var styles = {
   wrapper: {
   },
@@ -33,14 +33,52 @@ var styles = {
   }
 }
 
-export default ImageSwipe = () => <Swiper style={styles.wrapper} showsButtons>
-  <View style={styles.slide1}>
-    <Text style={styles.text}>Hello Swiper</Text>
-  </View>
-  <View style={styles.slide2}>
-    <Text style={styles.text}>Beautiful</Text>
-  </View>
-  <View style={styles.slide3}>
-    <Text style={styles.text}>And simple</Text>
-  </View>
-</Swiper>
+export default ImageSwiper = (props) =>  {
+  const [isImageView, setImageView] = useState(false);
+  const imageViewArr = [];
+  props.images.forEach((element, index) => {
+    const imageObj =  {
+          source: {
+              uri: element,
+          },
+          title: 'image_'+index,
+          width: 806,
+          height: 720,
+      }
+    imageViewArr.push(imageObj);
+  });
+    return (
+      <View>
+        {!isImageView && props.images ? 
+          <SliderBox
+              images={props.images}
+              sliderBoxHeight={200}
+              onCurrentImagePressed={index => {
+                setImageView(true)
+                console.warn(`image ${index} pressed`)}
+              }
+              dotColor="#FFEE58"
+              inactiveDotColor="#90A4AE"
+              dotStyle={{
+                width: 15,
+                height: 15,
+                borderRadius: 15,
+                marginHorizontal: 5,
+                padding: 0,
+                margin: 0
+              }}
+          /> : 
+          <ImageView
+              glideAlways
+              images={imageViewArr}
+              imageIndex={0}
+              animationType="fade"
+              isSwipeCloseEnabled = {true}
+              isPinchZoomEnabled = {true}
+              isVisible = {isImageView}
+              onClose={() => setImageView(false)}
+              renderFooter={(currentImage) => (<View style={{padding:10, backgroundColor: 'white'}}><Text>My footer</Text></View>)}
+          />
+        }
+    </View>)
+}

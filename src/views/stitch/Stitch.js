@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { View, Container, Text } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
+
+/** COMPONENTS IMPORT */
 import ProductCard from "../../components/ProductCard";
 import KFab from "../../components/KFab";
-
 import AddStitch from "./AddStitch";
-import { getStitchListAction } from "../../redux_store/actions/stitch/stitch-list.actions";
+
+/** REDUX IMPORTS */
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import { getStitchListAction } from "../../redux_store/actions/stitch/stitch-list.actions";
 import { deleteStitchAction } from "../../redux_store/actions/stitch/delete-stitch.actions";
 
 const Stitch = (props) => {
@@ -50,7 +53,11 @@ const Stitch = (props) => {
       if(props.stitch_list) {
         console.log("PRODUCT CARDDDD ", props.stitch_list);
         return props.stitch_list.map((stitch, index) => {
-              return <ProductCard key={index} type={stitch}
+                    const images = [];
+                    stitch.images.forEach(obj => {
+                      images.push(obj.image);
+                    });
+                    return <ProductCard listItems={props.stitch_list} key={index} type={stitch} images={images}
                         editIconClick={() => dispatch({type: 'EDIT', data: stitch})}
                         trashIconClick={() => dispatch({type: 'DELETE', id: stitch.id})}
                     ></ProductCard>
