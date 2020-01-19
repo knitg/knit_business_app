@@ -48,19 +48,19 @@ const Stitch = (props) => {
     } 
   }
   const [state, dispatch] = useReducer(reducer, initialState);
-  /** Product Card map */
+
+  /** Product Cards map */
   const productCard = () => {
       if(props.stitch_list) {
-        console.log("PRODUCT CARDDDD ", props.stitch_list);
         return props.stitch_list.map((stitch, index) => {
-                    const images = [];
-                    stitch.images.forEach(obj => {
-                      images.push(obj.image);
-                    });
-                    return <ProductCard listItems={props.stitch_list} key={index} type={stitch} images={images}
-                        editIconClick={() => dispatch({type: 'EDIT', data: stitch})}
-                        trashIconClick={() => dispatch({type: 'DELETE', id: stitch.id})}
-                    ></ProductCard>
+            const images = [];
+            stitch.images.forEach(obj => {
+              images.push(obj.image);
+            });
+            return <ProductCard listItems={props.stitch_list} key={index} type={stitch} images={images}
+                editIconClick={() => dispatch({type: 'EDIT', data: stitch})}
+                trashIconClick={() => dispatch({type: 'DELETE', id: stitch.id})}
+        ></ProductCard>
         });
       }
       return null;
