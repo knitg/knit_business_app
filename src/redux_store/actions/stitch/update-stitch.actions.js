@@ -8,6 +8,7 @@ import { CONST_STITCH } from '../../constants/stitch.constant';
 export const updateStitchAction = (id, formData) => {
     console.log("INSIDE updateStitchAction", id);
     return (dispatch, getState) => {
+        dispatch(FETCH_STITCH_LOADING(true));
         console.log(`${API_HOST}${PRODUCT_PFX}${STITCH}/${id}`)
         return axios.put(`${API_HOST}${PRODUCT_PFX}${STITCH}/${id}`, formData)
             .then(response => {
@@ -17,9 +18,17 @@ export const updateStitchAction = (id, formData) => {
             .catch(error => {
                 dispatch(UPDATE_STITCH_ERROR(error))
                 console.log(error);
-            });
+            }).finally(() => {
+                dispatch(FETCH_STITCH_LOADING(false));
+            });;
     }
 }
+export const FETCH_STITCH_LOADING = (loading) => {
+    return {
+        type: CONST_STITCH.STITCH_LOADING,
+        loading
+    };
+};
 
 export const UPDATE_STITCH = (update_stitch_id) => {
     return {

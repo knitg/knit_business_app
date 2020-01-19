@@ -8,6 +8,10 @@ export default stitchReducer = (state = initialState, action) => {
     case CONST_STITCH.STITCH_LIST:
       const stitchlist = action.stitch;
       return { ...state, stitchlist };
+
+    case CONST_STITCH.STITCH_LOADING:
+      const loading = action.loading
+      return { ...state, loading};
       
     case CONST_STITCH.STITCH_TYPE_LIST:
       const stitchtypeList = action.stitchtypeList;

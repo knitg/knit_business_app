@@ -16,8 +16,9 @@ var imageStyles = StyleSheet.create({
   },
   closeIcon: { 
     position: "absolute", 
-    top: -22, 
-    right: 5 
+    top: -20,
+    zIndex:99, 
+    right: 0 
   },
   thumbSize: {
     width:100,

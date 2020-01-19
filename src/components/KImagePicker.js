@@ -18,9 +18,13 @@ export default class RN_ImagePicker extends React.Component {
       photo: null,
     };
     if (this.props.hasImages && this.props.hasImages[0]) {
-      const temp = this.state.images;
-      temp.push(this.props.hasImages[0].image);
-      this.setState({ images: temp });
+      console.log(this.props.hasImages)
+      const imagesArr = this.props.hasImages.map((obj) => {
+        return obj.image;
+      })
+      // const temp = this.state.images;
+      // temp.push(imagesArr);
+      this.setState({ images: imagesArr });
       
       this.props.onImageSelect(this.state.images);
     }
@@ -47,7 +51,10 @@ export default class RN_ImagePicker extends React.Component {
     console.log("this.props.hasImages >> ", this.props.hasImages);
     this.getPermissionAsync();
     if (this.props.hasImages) {
-      this.setState({ images: this.props.hasImages });
+      const imagesArr = this.props.hasImages.map((obj) => {
+        return obj.image;
+      })
+      this.setState({ images: imagesArr });
       console.log("this.props.hasImages >> ", this.state.images);
     }
   }
