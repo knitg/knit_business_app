@@ -2,9 +2,8 @@ import React from "react";
 import { View, Text, CardItem, Icon, Right, Card } from "native-base";
 import { TouchableHighlight } from "react-native-gesture-handler";
 
-import {
-  FontAwesome
-} from "@expo/vector-icons";
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 
 const UserTypeList = (props) => {
 

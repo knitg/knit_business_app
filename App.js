@@ -3,7 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { createAppContainer } from 'react-navigation'; 
 import AppNavigator from './src/navigation-stacks/AppNavigator';
 import * as Font from 'expo-font';
-import { Ionicons } from '@expo/vector-icons';
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import StatusBar from './src/components/StatusBar';
 import { Provider } from 'react-redux';
 import store from './src/redux_store/store';

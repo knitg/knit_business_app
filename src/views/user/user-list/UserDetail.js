@@ -11,8 +11,7 @@ import {
   Button
 } from "native-base";
 import { TouchableHighlight } from "react-native-gesture-handler";
-
-import { FontAwesome } from "@expo/vector-icons";
+ 
 
 const UserDetail = props => {
   return (

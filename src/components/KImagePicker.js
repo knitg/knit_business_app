@@ -3,9 +3,13 @@ import { Button, Image, View, TouchableOpacity } from "react-native";
 import ImagePicker from 'react-native-image-picker'; 
 import * as Permissions from "expo-permissions";
 
-import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import { Text, ActionSheet, Container } from "native-base";
- 
+import styles from "../core/css/container-styles";
+import imageStyles from "../core/css/image-picker-styles";
+
 export default class RN_ImagePicker extends React.Component {
   constructor(props) {
     super(props);
@@ -13,8 +17,7 @@ export default class RN_ImagePicker extends React.Component {
       images: [],
       photo: null,
     };
-    console.log("this.state >>>> ", this.state, this.props);
-    if (this.props.hasImages) {
+    if (this.props.hasImages && this.props.hasImages[0]) {
       const temp = this.state.images;
       temp.push(this.props.hasImages[0].image);
       this.setState({ images: temp });
@@ -22,16 +25,27 @@ export default class RN_ImagePicker extends React.Component {
       this.props.onImageSelect(this.state.images);
     }
     //// CAMERA OPTIONS /////
-    this.options = { 
+    this.cameraOptions = { 
       allowsMultipleSelection: true,
       allowsEditing: true,
-      aspect: [4, 3],
+      maxWidth: 900,
+      maxHeight: 900,
       exif: true,
-      quality: 0.3
+      quality: 0.5
     }
   }
+  /** Permission check  */
+  getPermissionAsync = async () => { 
+      const cameraStatus = await Permissions.askAsync(Permissions.CAMERA);
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== "granted" && cameraStatus.status !== 'granted' ) {
+        alert("Sorry, we need camera & camera roll permissions to make this work!");
+      } 
+  };
+  /** Permission check  */
   componentDidMount() {
     console.log("this.props.hasImages >> ", this.props.hasImages);
+    this.getPermissionAsync();
     if (this.props.hasImages) {
       this.setState({ images: this.props.hasImages });
       console.log("this.props.hasImages >> ", this.state.images);
@@ -41,52 +55,29 @@ export default class RN_ImagePicker extends React.Component {
   render() {
     return (
       <Container style={{ flex: 1 }}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "flex-end"
-          }}
-        >
+        <View style={styles.flexEndRow}>
 
-          <Text style={{ flex: 1, padding: 15 }} >{this.props.heading ? this.props.heading : "Take picture"} </Text>
-          <TouchableOpacity style={{ padding: 10 }} onPress={this.pickImage}>
-            <MaterialIcons
-              name="photo-library"
-              size={80}
-              color="#2aa1ff"
-            ></MaterialIcons>
+          <Text style={imageStyles.title} >{this.props.heading ? this.props.heading : "Take picture"} </Text>
+          
+          <TouchableOpacity style={styles.p_10} onPress={this.pickImageFromLibrary}>
+            <MaterialIcons name="photo-library" size={80} color="#2aa1ff" ></MaterialIcons>
           </TouchableOpacity>
-          <TouchableOpacity style={{ padding: 10 }} onPress={this.pickFromCamera}>
-            <MaterialIcons
-              name="camera-alt"
-              size={80}
-              color="#2aa1ff"
-            ></MaterialIcons>
+          
+          <TouchableOpacity style={styles.p_10} onPress={this.pickImageFromCamera}>
+            <MaterialIcons name="camera-alt" size={80} color="#2aa1ff" ></MaterialIcons>
           </TouchableOpacity>
+
         </View>
-        <View style={{ flex: 1, alignSelf: "flex-start", flexDirection: "row" }}>
+        <View style={styles.flexStartRow}>
         
           {this.state.images ?
             this.state.images.map((image, index) => (
-              <View
-                key={index}
-                style={{ padding: 10, margin: 5, position: "relative" }}
-              >
-                <MaterialCommunityIcons
-                  style={{ position: "absolute", top: -22, right: 5 }}
-                  name="close-box"
-                  size={35}
-                  color="#333333"
-                  onPress={this.popImage.bind(this, image)}
-                ></MaterialCommunityIcons>
-                <Image
-                  key={index}
-                  source={{ uri: image }}
-                  style={{ width: 100, height: 100 }}
-                />
-               
+              <View key={index} style={imageStyles.positionRelativeView} >
+                
+                <MaterialCommunityIcons style={imageStyles.closeIcon} name="close-box" size={35} color="#333333" onPress={this.removeImage.bind(this, image)} > </MaterialCommunityIcons>
+                
+                <Image key={index} source={{ uri: image }} style={imageStyles.thumbSize} />
+              
               </View>
             )) : null}
         </View>
@@ -94,22 +85,8 @@ export default class RN_ImagePicker extends React.Component {
     );
   }
 
-  componentDidMount() {
-    this.getPermissionAsync();
-    console.log("hi");
-  }
-
-  getPermissionAsync = async () => { 
-      const cameraStatus = await Permissions.askAsync(Permissions.CAMERA);
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      console.log("cameraStatus >>>>> ", cameraStatus);
-      if (status !== "granted" && cameraStatus.status !== 'granted' ) {
-        alert("Sorry, we need camera & camera roll permissions to make this work!");
-      } 
-  };
   /** Remove image from an array */
-  popImage = img => {
-    console.log(this.state.images, img, this.state.images.indexOf(img));
+  removeImage = img => {
     const temp = this.state.images;
     temp.splice(this.state.images.indexOf(img), 1);
     this.setState({ images: temp });
@@ -117,10 +94,9 @@ export default class RN_ImagePicker extends React.Component {
   };
   
   /** PICK IMAGE */
-  pickImage = () => {
-    ImagePicker.launchImageLibrary(this.options, result => {
-      console.log("LAUNCH IMAGE LIBRARY ", result);
-      if (response.uri) {
+  pickImageFromLibrary = () => {
+    ImagePicker.launchImageLibrary(this.cameraOptions, result => {
+      if (result.uri) {
         const temp = this.state.images;
         temp.push(result.uri);
         this.setState({ images: temp });
@@ -129,28 +105,17 @@ export default class RN_ImagePicker extends React.Component {
         }
       }
     });
-   
   };
-  _rotate90andFlip = async (uri) => {
-    const manipResult = await ImageManipulator.manipulateAsync(
-      uri,
-      [{ crop: {originX} }],
-      { compress: 0.5, format: ImageManipulator.SaveFormat.PNG }
-    );
-    this.setState({ image: manipResult });
-  };
-  pickFromCamera = () => {
-    ImagePicker.launchCamera(this.options, res => {
-      // this.setState({photo: 'data:image/jpeg;base64,' + res.data})
+  pickImageFromCamera = () => {
+    ImagePicker.launchCamera(this.cameraOptions, res => {
       this.setState({photo: res.uri})
       if(res.uri){
-          const temp = this.state.images;
-          console.log("this.props.hasImages >> ", this.state.images);
-          temp.push(res.uri);
-          this.setState({ images: temp });          
-          if (this.props.onImageSelect) {
-            this.props.onImageSelect(this.state.images);
-          }          
+        const temp = this.state.images;
+        temp.push(res.uri);
+        this.setState({ images: temp });
+        if (this.props.onImageSelect) {
+          this.props.onImageSelect(this.state.images);
+        }
       }
     }); 
   };

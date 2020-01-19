@@ -1,8 +1,7 @@
 import React from "react";
 import { View, Text, Container, H2 } from "native-base";
 
-import { Formik } from "formik";
-import { Ionicons, Octicons, AntDesign } from "@expo/vector-icons";
+import { Formik } from "formik"; 
 import { StyleSheet } from "react-native";
 import KPrimaryButton from "../../../components/KPrimaryButton";
 import * as yup from "yup";

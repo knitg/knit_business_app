@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Icon, Fab, View, Container, Text } from 'native-base';
-import { Ionicons, Octicons, AntDesign } from '@expo/vector-icons'
+import Octicons from 'react-native-vector-icons/Octicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 import { SafeAreaView, TouchableOpacity } from 'react-native';
 
 // here, we add the spacing for iOS

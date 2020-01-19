@@ -16,7 +16,8 @@ import {
   View
 } from "native-base";
 
-import { Ionicons, Octicons, AntDesign, FontAwesome } from "@expo/vector-icons";
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 
 const ProductCard = props => {
   const { title, description, price } = props; 

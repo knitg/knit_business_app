@@ -12,7 +12,8 @@ import {
 } from "native-base";
 import { TouchableHighlight } from "react-native-gesture-handler";
 
-import { FontAwesome } from "@expo/vector-icons";
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 
 const UserTypeDetail = props => {
   return (

@@ -8,7 +8,9 @@ import KAlert, { alert } from '../../../core/utils/alert';
  */
 export const addStitchAction = (formData) => {
     return (dispatch, getState) => {
-        return axios.post(`${API_HOST}${PRODUCT_PFX}${STITCH}`, formData)
+        return axios.post(`${API_HOST}${PRODUCT_PFX}${STITCH}`, formData, 
+                            { headers: { 'Content-Type': 'application/json', } }
+                          )
             .then(response => {
                 console.log("SUCCESS STITCH ", response);
                 dispatch(SET_ADD_STITCH(response.data))

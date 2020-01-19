@@ -1,12 +1,10 @@
 import React from "react";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 
-import {
-  Ionicons,
-  FontAwesome,
-  MaterialCommunityIcons,
-  MaterialIcons
-} from "@expo/vector-icons"; 
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import Profile from "../views/Profile";
 import Vendor from "../views/Vendor";
 import StitchView from "../views/StitchView";
