@@ -7,13 +7,11 @@ import ProductCard from "../../components/ProductCard";
 import KFab from "../../components/KFab";
 import AddStitch from "./AddStitch";
 
-import { Animated } from 'react-native';
 /** REDUX IMPORTS */
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { getStitchListAction } from "../../redux_store/actions/stitch/stitch-list.actions";
-import { deleteStitchAction } from "../../redux_store/actions/stitch/delete-stitch.actions";
+import { bindActionCreators } from "redux"; 
 import Loader from "../../components/Loader";
+import { deleteStitchAction, getStitchListAction } from "../../redux_store/actions/stitch/crud-stitch.actions";
 
 const Stitch = (props) => {
   const [animation, setAnimation] = useState(null);
@@ -71,7 +69,7 @@ const Stitch = (props) => {
   return (
     <Container style={{ flex: 1 }}>
         { props.loading ? <Loader></Loader> : 
-          <View>
+          <Container>
             {state.isNew || state.isEdit ? (
               <View style={{ height:'100%', borderWidth:1, borderColor:'yellow', borderStyle:'solid'}}>
                 <AddStitch isEditMode={state.isEdit} selectedStitchItem={selectedStitchItem} cancelClick={() => dispatch({type:'LIST'})}></AddStitch>
@@ -86,7 +84,7 @@ const Stitch = (props) => {
               (state.isNew && state.isEdit) ? null : <KFab fabClicked={(status) => status ? dispatch({type: 'LIST'}) 
               : dispatch({type: 'ADD'})}></KFab>
             }
-          </View> 
+          </Container> 
         }
     </Container>
   );

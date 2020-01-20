@@ -5,8 +5,7 @@ import KPrimaryButton from "../../components/KPrimaryButton";
 import { H2, View } from "native-base";
 import KTextInput from "../../components/KTextInput"; 
  
-import { addStitchAction } from "../../redux_store/actions/stitch/add-stitch.actions";
-import { updateStitchAction } from "../../redux_store/actions/stitch/update-stitch.actions";
+import { addStitchAction, updateStitchAction } from "../../redux_store/actions/stitch/crud-stitch.actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";  
 import RN_ImagePicker from "../../components/KImagePicker";
