@@ -1,11 +1,13 @@
 import React from "react";
 import { Image, TouchableHighlight } from "react-native";
+
 import { Card, CardItem, Text, Left, Body, Right, View } from "native-base";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ImageSwiper from "./ImageSwiper";
 
 const ProductCard = props => {
   const { images } = props; 
+  
   console.log("PRODUCT IMAGESSS", images) 
   return (
     <Card>
@@ -30,10 +32,12 @@ const ProductCard = props => {
         </Right>
       </CardItem>
       { images.length >= 1 ? 
-        <CardItem cardBody>
+        <CardItem cardBody >
             <ImageSwiper images={images}></ImageSwiper>
         </CardItem>
-        : null
+        : <CardItem cardBody>
+             
+          </CardItem>
       }
     </Card>
   );

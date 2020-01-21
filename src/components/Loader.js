@@ -28,7 +28,7 @@ const Loader = (props) => {
                 source={require('../core/lottie/spot-animation.json')}
                 progress={ new Animated.Value(0)}
                 />
-                <Text style={{position:'relative',top:10,alignSelf: 'center'}}>Loading...</Text>
+                {/* <Text style={{position:'relative',top:10,alignSelf: 'center'}}>Loading...</Text> */}
         </View>
     )
 }
