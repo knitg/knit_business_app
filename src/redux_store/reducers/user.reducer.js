@@ -3,7 +3,6 @@ import { CONST_USER } from "../constants/user.constant";
 const initialState = {};
 
 export default userReducer = (state = initialState, action) => {
-  console.log(action)
   switch (action.type) {
     case CONST_USER.USER_LIST:
       const users = action.users

@@ -7,8 +7,7 @@ import { Container, View, Text } from 'native-base';
 const LoaderImage = (props) => {
 
     const [animation, setAnimation] = useState(null);
-    useEffect(() => {
-        console.log("\n\n\n\n 2nd ANIMATIONNNN >>>> ", animation);
+    useEffect(() => { 
         if(animation){
           animation.play();
         }

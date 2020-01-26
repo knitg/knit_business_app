@@ -14,8 +14,7 @@ const KTextInput = ({label, formikKey, formikProps, style, values, ...rest}) => 
     }
     if (formikProps.touched[formikKey] && formikProps.errors[formikKey]) {
         inputStyles.borderColor = 'red';
-    } 
-    console.log("FORMIK PROPS ", formikProps)
+    }
     return (
         <View style={{ marginHorizontal: 10, marginVertical: 5 }}>
             { label ? (<Text style={{ marginBottom: 3 }}>{label}</Text>) : null }

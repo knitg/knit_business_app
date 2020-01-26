@@ -1,13 +1,14 @@
-import React, { useState } from "react";
-import { Formik } from "formik";
+import React, { useState, useEffect } from "react";
+import { Formik, Field } from "formik";
 import * as yup from "yup";
 import KPrimaryButton from "../../components/KPrimaryButton";
 import { H2, Picker, View, Container } from "native-base";
 import KTextInput from "../../components/KTextInput"; 
- 
+import {ReactSelect} from 'react-native';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";  
 import RN_ImagePicker from "../../components/KImagePicker";
+import RNPickerSelect from 'react-native-picker-select';
 
 import StitchStyles from "./Stitch.styles.scss";
 import { addStitchTypeAction, updateStitchTypeAction } from "../../redux_store/actions/stitch/crud-stitch-type.action.js";
@@ -15,6 +16,7 @@ import { addStitchTypeAction, updateStitchTypeAction } from "../../redux_store/a
 const AddStitchType = props => {
   const [images, setImages] = useState([]);  
   const [stitch, setStitch] = useState([]);
+  const [stitchesObj, setStitchesObj] = useState([]);
 
   let formData = new FormData();
   /**
@@ -24,10 +26,10 @@ const AddStitchType = props => {
   const saveOrUpdateStitch = formData => {
     if (props.selectedStitchItem) {
       console.log("UPDATE SECTION ", props.selectedStitchItem);
-      props.updateStitchTypeAction(props.selectedStitchItem.id, formData);
+      // props.updateStitchTypeAction(props.selectedStitchItem.id, formData);
     } else {
-      console.log("ADD SECTION ", props.selectedStitchItem);
-      props.addStitchTypeAction(formData);
+      console.log("ADD SECTION TYPE", props.selectedStitchItem);
+      // props.addStitchService(formData);
     }
     props.cancelClick();
   };
@@ -38,7 +40,8 @@ const AddStitchType = props => {
     formData.append("description", values.description);
     formData.append("stype", values.stype);
     formData.append("code", values.stype.replace(/\s/g, ""));
-    formData.append("stitch", stitch);
+    formData.append("stitch", stitch.toString());
+    console.log(stitch, values,)
     if (images.length >= 1) {
       images.forEach( async (image, index) => { 
         formData.append("image" + index, {
@@ -54,6 +57,18 @@ const AddStitchType = props => {
     console.log("HANDLE IMAGE ARRAY", imgArr);
     setImages(imgArr);
   };
+  
+  useEffect(() => {
+    if(props.stitchList) {
+      const stich_list = props.stitchList.map((stitch, i) => {
+        return { label: stitch.stype, value: stitch.id }
+      });
+      console.log("STITCH LISR ", stich_list);
+      setStitchesObj(stich_list);
+    }
+  }, []);
+
+
   const formikInitValues = {
     stitch: props.stitch ? props.selectedStitchItem.stitch : "",
     stype: props.selectedStitchItem ? props.selectedStitchItem.stype : "",
@@ -71,14 +86,21 @@ const AddStitchType = props => {
               }} 
         validationSchema={validationSchema}>
         {formikProps => (
-          <View style={{flex: 1}}>
-            <Picker mode="dropdown" style={{flex:1, margin:5 }} selectedValue={stitch} onValueChange={(val) => setStitch(val)}>
-                {props.stitchList.length >= 1 && props.stitchList.map((stitch, i) => {
-                  return <Picker.Item key={i} label={stitch.stype} value={stitch.id}
-                  itemStyle={{ backgroundColor: "grey", color: "blue", fontSize:17, borderColor:'green', borderStyle:'solid', borderWidth:3 }}
-                  />
-                })}
-            </Picker>
+          <View style={{flex: 1}}> 
+            <Field name="stitch" 
+                component={({field, form}) =>
+                <RNPickerSelect
+                    style={{margin:10, padding:10}}
+                    items={stitchesObj}
+                    value={stitch}
+                    onValueChange={(val) => {
+                        console.log("VALLLL ", val, stitch);
+                        setStitch(val)
+                      } 
+                    }
+                />
+                }  
+              />
             <KTextInput placeholder="Stitch" formikProps={formikProps} formikKey="stype" />
             <KTextInput placeholder="Description" formikProps={formikProps} formikKey="description" />
             
@@ -123,7 +145,7 @@ const mapStateToProps = ({ stitch }) => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      addStitchTypeAction: addStitchTypeAction,
+      addStitchService: addStitchTypeAction,
       updateStitchTypeAction: updateStitchTypeAction
     },
     dispatch

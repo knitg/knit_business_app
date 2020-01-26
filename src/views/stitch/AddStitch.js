@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik } from "formik";
 import * as yup from "yup";
 import KPrimaryButton from "../../components/KPrimaryButton";
@@ -13,7 +13,11 @@ import RN_ImagePicker from "../../components/KImagePicker";
 import StitchStyles from "./Stitch.styles.scss";
 
 const AddStitch = props => {
-  const [images, setImages] = useState([]);  
+  const [images, setImages] = useState([]); 
+  useEffect(() => {
+    console.log("use effect ", props);
+  }, []);
+
   let formData = new FormData();
   /**
    * Save Or Update action triggers

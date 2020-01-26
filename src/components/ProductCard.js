@@ -7,8 +7,9 @@ import ImageSwiper from "./ImageSwiper";
 
 const ProductCard = props => {
   const { images } = props; 
-  
-  console.log("PRODUCT IMAGESSS", images) 
+  const editActionClick = (selectedItem) => {
+    props.editIconClick(selectedItem);
+  }
   return (
     <Card>
       <CardItem>
@@ -20,7 +21,7 @@ const ProductCard = props => {
         </Left>
         <Right>
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-            <TouchableHighlight onPress={props.editIconClick}>
+            <TouchableHighlight onPress={() => editActionClick(props.type)}>
               <FontAwesome style={{ padding: 10, alignSelf: 'center' }} name="edit" size={32} color="grey"
                 onPress={props.editIconClick}
               />

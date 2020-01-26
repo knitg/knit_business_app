@@ -61,7 +61,7 @@ export const updateStitchAction = (id, formData) => {
         return axios.put(`${API_HOST}${PRODUCT_PFX}${STITCH}/${id}`, formData)
             .then(response => {
                 console.log("SUCCESSFULLY updated", response.data);
-                dispatch(SUCCESS_RESPONSE(CONST_STITCH.UPDATE_STITCH, response.data))
+                dispatch(SUCCESS_RESPONSE(CONST_STITCH.STITCH_UPDATE, response.data))
             })
             .catch(error => {
                 dispatch(ERROR_RESPONSE(CONST_STITCH.STITCH_UPDATE_ERR, error))

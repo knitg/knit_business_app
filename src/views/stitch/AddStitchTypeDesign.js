@@ -1,19 +1,170 @@
-import React from "react";
-import { View, Text, Container } from "native-base";
-import { StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Formik, Field } from "formik";
+import * as yup from "yup";
+import KPrimaryButton from "../../components/KPrimaryButton";
+import { H2, Picker, View, Container } from "native-base";
+import KTextInput from "../../components/KTextInput"; 
+ 
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";  
+import RN_ImagePicker from "../../components/KImagePicker";
 
-function AddStitchTypeDesign(props) {
+import StitchStyles from "./Stitch.styles.scss";
+import { getStitchTypeListAction } from "../../redux_store/actions/stitch/crud-stitch-type.action.js";
+import RNPickerSelect from 'react-native-picker-select';
+import { getStitchListAction } from "../../redux_store/actions/stitch/crud-stitch.actions";
+import { addStitchTypeDesignAction, updateStitchTypeDesignAction } from "../../redux_store/actions/stitch/crud-stitch-design.action";
+
+
+const AddStitchTypeDesign = props => {
+  const [images, setImages] = useState([]);  
+  const [stitch, setStitch] = useState([]);
+  const [stitchType, setStitchType] = useState([]);
+  const [stitchesObj, setStitchesObj] = useState([]);
+  
+
+  let formData = new FormData();
+  /**
+   * Save Or Update action triggers
+   * @param {*} formData - formData
+   */
+  const saveOrUpdateStitch = formData => {
+    if (props.selectedStitchItem) {
+      console.log("UPDATE SECTION ", props.selectedStitchItem);
+      props.updateStitchTypeDesignService(props.selectedStitchItem.id, formData);
+    } else {
+      console.log("ADD SECTION TYPE", props.selectedStitchItem);
+      props.addStitchTypeDesignService(formData);
+    }
+    props.cancelClick();
+  };
+  /**
+   * Prepare Form Data here..
+   */
+  const prepareFormData = (values) => {
+    formData.append("description", values.description);
+    formData.append("stype", values.stype);
+    formData.append("code", values.stype.replace(/\s/g, ""));
+    formData.append("stitch", stitch.toString());
+    console.log(stitch, values,)
+    if (images.length >= 1) {
+      images.forEach( async (image, index) => { 
+        formData.append("image" + index, {
+          type: "image/jpg",
+          uri: image, 
+          name: values.stype + "_" + new Date().getTime() + "_" + index + ".jpg"
+        }); 
+      });
+    }
+  }
+  
+  useEffect(() => {
+    if(props.stitchList) {
+      const stich_list = props.stitchList.map((stitch, i) => {
+        return { label: stitch.stype, value: stitch.id }
+      });
+      console.log("STITCH LISR ", stich_list);
+      setStitchesObj(stich_list);
+    }
+  }, []);
+
+
+  /** Handle images */ 
+  const handleImages = imgArr => {
+    console.log("HANDLE IMAGE ARRAY", imgArr);
+    setImages(imgArr);
+  };
+  const formikInitValues = {
+    stitch: props.stitch ? props.selectedStitchItem.stitch : "",
+    stype: props.selectedStitchItem ? props.selectedStitchItem.stype : "",
+    description: props.selectedStitchItem ? props.selectedStitchItem.description : ""
+  }
   return (
-    <View style={{ flex: 1 }}>
-        <Text>ADD STITCH TYPE DESIGN SCREEN</Text>
-    </View>
+    <Container style={StitchStyles.container}>
+      <H2 style={StitchStyles.heading}>
+        {props.isEditMode ? "UPDATE" : "ADD"} STITCH
+      </H2>
+      <Formik initialValues={formikInitValues} onSubmit={(values, actions) => 
+              {
+                  prepareFormData(values)
+                  saveOrUpdateStitch(formData);
+              }} 
+        validationSchema={validationSchema}>
+        {formikProps => (
+          <View style={{flex: 1}}> 
+            <RNPickerSelect
+                style={{margin:10, padding:10}}
+                items={stitchesObj}
+                value={stitch}
+                onValueChange={(val) => {
+                    console.log("VALLLL ", val, stitch);
+                    setStitch(val)
+                  } 
+                }
+            />
+            <RNPickerSelect
+                style={{margin:10, padding:10}}
+                items={stitchesObj}
+                value={stitch}
+                onValueChange={(val) => {
+                    console.log("VALLLL ", val, stitch);
+                    setStitch(val)
+                  } 
+                }
+            />
+                 
+            <KTextInput placeholder="Stitch" formikProps={formikProps} formikKey="stype" />
+            <KTextInput placeholder="Description" formikProps={formikProps} formikKey="description" />
+            
+            <RN_ImagePicker hasImages={ props.selectedStitchItem ? props.selectedStitchItem.images : null} onImageSelect={handleImages}></RN_ImagePicker> 
+
+            <View style={StitchStyles.btn_container}>
+              <KPrimaryButton title={props.selectedStitchItem ? "UPDATE" : "ADD" } onPress={formikProps.handleSubmit} style={StitchStyles.button} />
+              <KPrimaryButton title="CANCEL" onPress={props.cancelClick} style={[StitchStyles.button, StitchStyles.btn_red]} />
+            </View>
+          </View> 
+        )}
+      </Formik>
+    </Container>
   );
-}
-const styles = StyleSheet.create({
-  actionButtonIcon: {
-    fontSize: 25,
-    height: 22,
-    color: 'white',
-  },
+};
+
+/**
+ * Validation schema
+ * stitch, description validations here
+ */
+const validationSchema = yup.object().shape({
+  stype: yup
+    .string()
+    .required()
+    .label("Stitch")
+    .min(2, "Seems a bit short")
+    .max(10, "We prefer insecure system"),
+  description: yup
+    .string()
+    .required()
+    .label("Description")
+    .min(2, "Description should be atleast 2 characters")
 });
-export default AddStitchTypeDesign;
+
+const mapStateToProps = ({ stitch }) => {
+  console.log("MAP STATE STITCH TYPE DESIGN", stitch);
+  return {
+    stitchList : stitch.stitchlist,
+    stitch_id: stitch.stitch_id,
+    update_stitch_id: stitch.update_stitch_id
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    {
+      getStitchListService: getStitchListAction,
+      getStitchTypeListService: getStitchTypeListAction,
+      addStitchTypeDesignService: addStitchTypeDesignAction,
+      updateStitchTypeDesignService: updateStitchTypeDesignAction
+    },
+    dispatch
+  );
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddStitchTypeDesign);
