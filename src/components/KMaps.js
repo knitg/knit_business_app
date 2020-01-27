@@ -10,40 +10,38 @@ import {
 
 import MapView, { Marker } from 'react-native-maps';
 
-const { width, height } = Dimensions.get('window');
 import Geolocation from '@react-native-community/geolocation';
 
-const ASPECT_RATIO = width / height;
-const LATITUDE = 37.78825;
-const LONGITUDE = -122.4324;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-const SPACE = 0.01;
-
-function createMarker(modifier = 1) {
-  return {
-    latitude: LATITUDE - SPACE * modifier,
-    longitude: LONGITUDE - SPACE * modifier,
-  };
-}
-
-const MARKERS = [
-  createMarker(),
-    //   createMarker(2),
-    //   createMarker(3),
-    //   createMarker(4),
-];
 
 const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 };
 
+const { width, height } = Dimensions.get('window');
+
 class FitToCoordinates extends React.Component {
-  _isMounted = false;
-    state = {
+  async logFrames() {
+    const visMarkersFrames = await this.map.getMarkersFrames(true);
+    console.log('Visible markers frames:', visMarkersFrames);
+    const allMarkersFrames = await this.map.getMarkersFrames();
+    console.log('All markers frames:', allMarkersFrames);
+  }
+
+  constructor(props){
+    super(props);
+    this._isMounted = false;
+    
+    const ASPECT_RATIO = width / height;
+    const LATITUDE = 0;
+    const LONGITUDE = 0;
+    const LATITUDE_DELTA = 0.0922;
+    this.LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+    const SPACE = 0.01;
+
+    this.state = {
       initialPosition: {
         latitude: LATITUDE,
         longitude: LONGITUDE,
         latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
+        longitudeDelta: this.LONGITUDE_DELTA,
       },
       lastPosition: 'unknown',
       markerPosition: {
@@ -51,9 +49,28 @@ class FitToCoordinates extends React.Component {
         longitude: LONGITUDE        
       }
     };
-    watchID = null;
+    this.watchID = null;
+    this.MARKERS = [];
+
+    this.createMarker = (lat=this.state.initialPosition.latitude, 
+      lng= this.state.initialPosition.longitude, modifier = 1) => {
+      return {
+        // latitude: lat - SPACE * modifier,
+        // longitude: lng - SPACE * modifier,
+        latitude: lat | 0,
+        longitude: lng | 0
+      };
+    }
+    this.MARKERS = [
+      this.createMarker(17.48, 78.41),
+      this.createMarker(17.14 , 77.04),
+      this.createMarker(17.85, 76.10),
+      this.createMarker(17.14 , 75.04),
+  ];
+  }
     componentDidMount() {
       this._isMounted = true;
+      
       Geolocation.getCurrentPosition(
         position => {
           console.log("get current position ", position);
@@ -61,13 +78,15 @@ class FitToCoordinates extends React.Component {
           this.setState({initialPosition :{
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
+            latitudeDelta: 0.0922,
+            longitudeDelta: this.LONGITUDE_DELTA,
           }, markerPosition : {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
           }
         });
+        // this.MARKERS[0] = this.createMarker(this.state.initialPosition.latitude, this.state.initialPosition.longitude, 1)
+        
         },
         error => console.log("get current position ERROR ", error),
         {enableHighAccuracy: false, timeout: 20000, maximumAge: 1000},
@@ -78,14 +97,16 @@ class FitToCoordinates extends React.Component {
         this.setState({initialPosition :{
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
+          latitudeDelta: 0.0922,
+          longitudeDelta: this.LONGITUDE_DELTA,
         }, markerPosition : {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude
         }
-      });
-        // this.setState({lastPosition});
+      });      
+      
+      // this.MARKERS = this.createMarker(this.state.initialPosition.latitude, this.state.initialPosition.longitude, 1);
+      this.fitAllMarkers();
       });
     }
     componentWillUnmount() {
@@ -100,22 +121,22 @@ class FitToCoordinates extends React.Component {
   }
 
   fitPadding() {
-    this.map.fitToCoordinates([MARKERS[2], MARKERS[3]], {
+    this.map.fitToCoordinates([this.MARKERS[0], this.MARKERS[1]], {
       edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
       animated: true,
     });
   }
 
   fitBottomTwoMarkers() {
-    this.map.fitToCoordinates([MARKERS[2], MARKERS[3]], {
+    this.map.fitToCoordinates([this.MARKERS[2], this.MARKERS[3]], {
       edgePadding: DEFAULT_PADDING,
       animated: true,
     });
   }
 
   fitAllMarkers() {
-    this.map.fitToCoordinates(MARKERS, {
-      edgePadding: DEFAULT_PADDING,
+    this.map.fitToCoordinates(this.MARKERS, {
+      edgePadding: { top: 10, right: 10, bottom: 10, left: 10 },
       animated: true,
     });
   }
@@ -129,20 +150,19 @@ class FitToCoordinates extends React.Component {
           }}
           style={styles.map}
           initialRegion={this.state.initialPosition}
-        >
-           <Marker identifier={`id1`} coordinate={this.state.markerPosition} />
-          {/* {MARKERS.map((marker, i) => (
+        > 
+          {this.MARKERS.map((marker, i) => (
             <Marker key={i} identifier={`id${i}`} coordinate={marker} />
-          ))} */}
+          ))}
         </MapView>
         <View style={styles.buttonContainer}>
-          {/* <TouchableOpacity
+          <TouchableOpacity
             onPress={() => this.fitPadding()}
             style={[styles.bubble, styles.button]}
           >
             <Text>Fit Bottom Two Markers with Padding</Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => this.fitBottomTwoMarkers()}
             style={[styles.bubble, styles.button]}
           >
@@ -152,7 +172,7 @@ class FitToCoordinates extends React.Component {
             onPress={() => this.fitAllMarkers()}
             style={[styles.bubble, styles.button]}
           >
-  <Text>Fit All Markers {this.state.markerPosition.latitude} </Text>
+          <Text>Fit All Markers {this.state.markerPosition.latitude} </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this.logFrames()}
