@@ -15,8 +15,21 @@ import { PROVIDER_GOOGLE } from "react-native-maps";
 import FitToCoordinates from "../../components/KMaps";
 
 const Stitch = (props) => {
+  const createMarker = (lat=this.state.position.latitude,  lng= this.state.position.longitude) => {
+    return {
+      latitude: lat | 0,
+      longitude: lng | 0
+    };
+  }
+  const markers = [
+    createMarker(17.48, 78.41),
+    createMarker(17.14 , 77.04),
+    createMarker(17.85, 76.10),
+    createMarker(17.14 , 75.04),
+];
   useEffect(() => {
     props.getStitchList(); 
+
   }, [props.delete_stitch_id, props.stitch_id, props.update_stitch_id]);
   
   /** INITIAL STATE */
@@ -61,7 +74,7 @@ const Stitch = (props) => {
             ) : (
               <Container>
                 {props.delete_stitch_id ? props.getStitchList() : null}
-                <FitToCoordinates provider={PROVIDER_GOOGLE}></FitToCoordinates>
+                <FitToCoordinates provider={PROVIDER_GOOGLE} markers= {markers}></FitToCoordinates>
                 {/* <FlatCardsList list={props.stitch_list} listMethod={props.getStitchList}
                   editAction={(editData) => dispatch({type: 'EDIT', data: editData})}
                   deleteAction = {(id) => dispatch({type: 'DELETE', data: id})}
