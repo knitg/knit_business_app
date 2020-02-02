@@ -3,7 +3,7 @@ import { View } from 'native-base';
 import { TextInput, Text } from 'react-native';
 
 
-const KTextInput = ({label, formikKey, formikProps, style, values, ...rest}) => {
+const KTextInput = ({label, formikKey, formikProps, style, values, onUpdateValue, ...rest}) => {
     const inputStyles = {
         borderWidth: 1,
         borderColor: 'grey',
@@ -22,6 +22,10 @@ const KTextInput = ({label, formikKey, formikProps, style, values, ...rest}) => 
             <TextInput
                 style={[inputStyles, style]}
                 onChangeText={formikProps.handleChange(formikKey)}
+                onChange = {e => {
+                    console.log("ON CHANGE ", e);
+                    onUpdateValue(formikProps.values[formikKey]);
+                }}
                 onBlur={formikProps.handleBlur(formikKey)}
                 value = {formikProps.values[formikKey]}
                 {...rest}

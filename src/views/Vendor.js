@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import { View, Text, Tab } from "native-base";
 import HeaderToolBar from "../components/HeaderToolBar";
 import KTabs from "../components/Tabs";
-import Tailor from "./vendors/Tailor";
+import VendorUser from "./vendors/vendor-user/VendorUser";
 import Boutique from "./vendors/Boutique";
 import FashionDesigner from "./vendors/FashionDesigner";
 import MaggamDesigner from "./vendors/MaggamDesigner";
@@ -35,13 +35,14 @@ const Vendor = (props) => {
   return (
     <View style={{ flex: 1 }}>
       <HeaderToolBar showBack={true} showSearch={true}  title="Vendors"></HeaderToolBar>
-      <KTabs>
+      <VendorUser></VendorUser>
+      {/* <KTabs>
         {tabs.map((tab, index) => (
           <Tab key={index} heading={tab.type}>
             {ScreenByCode(tab.code)}
           </Tab>
         ))}
-      </KTabs>
+      </KTabs> */}
     </View>
   );
 };

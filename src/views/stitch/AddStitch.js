@@ -9,9 +9,10 @@ import { addStitchAction, updateStitchAction } from "../../redux_store/actions/s
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";  
 import RN_ImagePicker from "../../components/KImagePicker";
-
+import Geocoder from 'react-native-geocoding';
 import StitchStyles from "./Stitch.styles.scss";
 
+Geocoder.init("AIzaSyB5yw05RlbSDkxqDF2Chm9Ob_RU2CPMVkE");
 const AddStitch = props => {
   const [images, setImages] = useState([]); 
   useEffect(() => {
@@ -60,7 +61,16 @@ const AddStitch = props => {
     saveOrUpdateStitch(formData);
     console.log(images);
   };
-   
+  const onUpdateValue = (val) => {
+        console.log("UPDATED VAL", val);
+        // Geocoder.from(val)
+        // .then(json => {
+        //   console.log(json);
+        //   var location = json.results[0].geometry.location;
+        //   console.log(location);
+        // })
+        // .catch(error => console.warn(error));
+  }
   const handleImages = imgArr => {
     console.log("HANDLE IMAGE ARRAY", imgArr);
     setImages(imgArr);
@@ -80,7 +90,7 @@ const AddStitch = props => {
               }} validationSchema={validationSchema} >
         {formikProps => (
           <View style={{ flex: 1 }}>
-            <KTextInput placeholder="Stitch" formikProps={formikProps} formikKey="stype" />
+            <KTextInput placeholder="Stitch" formikProps={formikProps} formikKey="stype" onUpdateValue={onUpdateValue} />
             <KTextInput placeholder="Description" formikProps={formikProps} formikKey="description" /> 
             <RN_ImagePicker hasImages={ props.selectedStitchItem ? props.selectedStitchItem.images : null} onImageSelect={handleImages}></RN_ImagePicker> 
 
