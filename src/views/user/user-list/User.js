@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View } from "native-base";
-import { ScrollView } from "react-native-gesture-handler";
-import { getUserListAction } from "../../../redux_store/actions/users/user-list.actions";
+import { ScrollView } from "react-native-gesture-handler"; 
 
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux"; 
@@ -9,8 +8,8 @@ import { connect } from "react-redux";
 import UserList from "./UserList";
 import UserDetail from "./UserDetail";
 import AddUser from "./AddUser";
-import { getUserDetailAction } from "../../../redux_store/actions/users/user-detail.actions";
 import KFab from "../../../components/KFab";
+import { getUserListAction } from "../../../redux_store/actions/users/crud-user.actions";
 
 
 const User = (props) => {
@@ -94,8 +93,7 @@ const mapStateToProps = ({ user }) => {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
     {
-      getUserList: getUserListAction,
-      getUserDetail: getUserDetailAction
+      getUserList: getUserListAction
     },
     dispatch
   );

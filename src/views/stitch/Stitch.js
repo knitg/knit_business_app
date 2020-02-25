@@ -74,7 +74,6 @@ const Stitch = (props) => {
             ) : (
               <Container>
                 {props.delete_stitch_id ? props.getStitchList() : null}
-                {/* <FitToCoordinates provider={PROVIDER_GOOGLE} markers= {markers}></FitToCoordinates> */}
                 <FlatCardsList list={props.stitch_list} listMethod={props.getStitchList}
                   editAction={(editData) => dispatch({type: 'EDIT', data: editData})}
                   deleteAction = {(id) => dispatch({type: 'DELETE', data: id})}

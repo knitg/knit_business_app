@@ -11,9 +11,23 @@ import { bindActionCreators } from "redux";
 import RN_ImagePicker from "../../components/KImagePicker";
 import Geocoder from 'react-native-geocoding';
 import StitchStyles from "./Stitch.styles.scss";
+import { PROVIDER_GOOGLE } from "react-native-maps"; 
+import FitToCoordinates from "../../components/KMaps";
 
 Geocoder.init("AIzaSyB5yw05RlbSDkxqDF2Chm9Ob_RU2CPMVkE");
 const AddStitch = props => {
+  const createMarker = (lat=this.state.position.latitude,  lng= this.state.position.longitude) => {
+    return {
+      latitude: lat | 0,
+      longitude: lng | 0
+    };
+  }
+  const markers = [
+      createMarker(17.48, 78.41),
+      createMarker(17.14 , 77.04),
+      createMarker(17.85, 76.10),
+      createMarker(17.14 , 75.04),
+  ];
   const [images, setImages] = useState([]); 
   useEffect(() => {
     console.log("use effect ", props);
@@ -94,6 +108,7 @@ const AddStitch = props => {
             <KTextInput placeholder="Description" formikProps={formikProps} formikKey="description" /> 
             <RN_ImagePicker hasImages={ props.selectedStitchItem ? props.selectedStitchItem.images : null} onImageSelect={handleImages}></RN_ImagePicker> 
 
+            {/* <FitToCoordinates provider={PROVIDER_GOOGLE} markers= {markers}></FitToCoordinates> */}
             <View style={StitchStyles.btn_container}>
               <KPrimaryButton title={props.selectedStitchItem ? "UPDATE" : "ADD" } onPress={formikProps.handleSubmit} style={StitchStyles.button} />
               <KPrimaryButton title="CANCEL" onPress={props.cancelClick} style={[StitchStyles.button, StitchStyles.btn_red]} />

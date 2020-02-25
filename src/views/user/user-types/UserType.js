@@ -1,60 +1,98 @@
-import React, {useState} from "react";
-import { View, Text } from "native-base";
-import { ScrollView } from "react-native-gesture-handler";  
-import UserTypeList from "./UserTypeList";
+import React, {useState, useReducer} from "react";
+import { View, Text, Container } from "native-base";
+
 import KFab from "../../../components/KFab";
 import AddUserType from "./AddUserType";
+import Loader from "../../../components/Loader";
 
+/** REDUX IMPORTS */
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 
 function UserType(props) {
-  const [newUserTypeVisible, setnewUserTypeVisible] = useState(false);
-  const [userTypeVisible, setUserTypeVisible] = useState(true);
+  
+  
+  /** INITIAL STATE */
+  const initialState = {
+    isList: true,
+    isEdit: false,
+    isNew: false
+  }
+  
+  // SelectedUserRole
+  const [selectedUserType, setSelectedUserType] = useState(null);
 
-  
-/**
-   * Below click event handles the user List visible against the click
-   * @param {*} user - clicked user details
-   */
-  const showNewUserType = () => {
-    console.log("clicked")
-    // visible user detail screen
-    setnewUserTypeVisible(true);
-    // making false to hide the screens
-    setUserTypeVisible(false);
-    // setUserDetailVisible(false);
+  /** USE REDUCER METHOD FOR LIST */
+  const reducer = (state, action) => {
+    switch(action.type) {
+      case 'LIST':
+        return {...state, isNew: false, isList: true, isEdit: false}
+      case 'ADD':
+        return {...state, isNew: true, isList: false, isEdit: false}
+      case 'EDIT':
+        // setSelectedStitchItem(action.data);
+        // console.log("\n\n\n\n\n EDIT CLICKED ", action);
+        // props.getStitchTypeList(); 
+        return {...state, isNew: false, isList: false, isEdit: true}
+      case 'DELETE':
+        // setSelectedStitchItem(action.data)
+        // props.deleteStitchTypeAction(action.data);
+        // props.getStitchTypeList();
+        return {...state, isNew: false, isList: false, isEdit: false}
+      default:
+        return {...state, isNew: false, isList: true, isEdit: false}
+    } 
   }
-  
-  /**
-   * Below click event handles the user List visible against the click
-   * @param {*} user - clicked user details
-   */
-  const showUserTypeList = () => {
-    console.log("clicked")
-    // visible user detail screen
-    setUserTypeVisible(true);
-    // making false to hide the screens
-    setnewUserTypeVisible(false);
-    // setUserDetailVisible(false);
-  }
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   return (
-    <View style={{flex: 1}}>
-      <ScrollView>
-        {/* USER ADD SCREEN */}
-        {userTypeVisible ?
-            <UserTypeList></UserTypeList>
-            : null
-          }
-        {/* USER ADD SCREEN */}
-        {newUserTypeVisible ?
-            <AddUserType cancelClick={showUserTypeList}></AddUserType>
-            : null
-          }
-      </ScrollView>
-      <KFab fabClicked={(status) => status ? showUserTypeList() : showNewUserType()}></KFab>
-    
-    </View>
+    <Container style={{ flex: 1 }}>
+        {/* { props.loading ? <Loader></Loader> :  */}
+          <Container>
+            {state.isNew || state.isEdit ? (
+              <View style={{ height:'100%', borderWidth:1, borderColor:'yellow', borderStyle:'solid'}}>
+                <AddUserType isEditMode={state.isEdit} selectedUserType={selectedUserType} 
+                    cancelClick={() => dispatch({type:'LIST'})}>
+                </AddUserType> 
+              </View>
+            ) : (              
+              <Container>
+                {/* {props.delete_stitch_id ? props.getStitchList() : null}
+                <FlatCardsList list={props.stitchTypeList} listMethod={props.getStitchTypeList}
+                  editAction={(editData) => dispatch({type: 'EDIT', data: editData})}
+                  deleteAction = {(id) => dispatch({type: 'DELETE', data: id})}
+                  ></FlatCardsList> */}
+                  <Text>USER LIST</Text>
+
+              </Container>
+            )}
+            {
+              (state.isNew && state.isEdit) ? null : <KFab fabClicked={(status) => status ? dispatch({type: 'LIST'}) 
+              : dispatch({type: 'ADD'})}></KFab>
+            }
+          </Container> 
+        {/* } */}
+    </Container>
   );
 }
 
-export default UserType;
+const mapStateToProps = (state) => { 
+  return {
+    userTypeList: state,
+    user_type_id: state,
+    loading: state,
+    delete_user_type_id: state
+  }
+};
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    {
+      // getUserTypeList: getUserTypeListAction,
+      // deleteUserTypeAction: deleteUserTypeAction
+    },
+    dispatch
+  );
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserType); 

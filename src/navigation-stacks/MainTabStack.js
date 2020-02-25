@@ -58,6 +58,9 @@ const MainTabStack = createBottomTabNavigator({
       )
     }
   }
+},
+{
+  initialRouteName: "User"  
 });
 
 export default MainTabStack;
