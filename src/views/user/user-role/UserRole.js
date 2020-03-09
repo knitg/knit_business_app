@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, Container } from "native-base";
 import { ScrollView } from "react-native-gesture-handler"; 
-import FlatCardsList from "../../../components/FlatProductCards";
-import KFab from "../../../components/KFab";
+import FlatCardsList from "../../../components/card/FlatProductCards";
+import KFab from "../../../components/fab/KFab";
 
 const UserRole = (props) => {
 

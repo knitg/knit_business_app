@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { View, Container, Text } from "native-base"; 
 
-/** COMPONENTS IMPORT */
-import KFab from "../../../components/KFab"; 
+/** COMPONENTS IMPORT */ 
 
 /** REDUX IMPORTS */
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux"; 
-import Loader from "../../../components/Loader";
-import FlatCardsList from "../../../components/FlatProductCards";
+import Loader from "../../../components/Loader"; 
 import AddVendor from "./AddVendorUser";
+import KFab from "../../../components/fab/KFab";
 
 const VendorUser = (props) => {
 //   const createMarker = (lat=this.state.position.latitude,  lng= this.state.position.longitude) => {
@@ -72,10 +71,10 @@ const VendorUser = (props) => {
               <Container>
                 {/* {props.delete_stitch_id ? props.getStitchList() : null} */}
                 {/* <FitToCoordinates provider={PROVIDER_GOOGLE} markers= {markers}></FitToCoordinates> */}
-                <FlatCardsList list={props.stitch_list} listMethod={props.getStitchList}
+                {/* <FlatCardsList list={props.stitch_list} listMethod={props.getStitchList}
                   editAction={(editData) => dispatch({type: 'EDIT', data: editData})}
                   deleteAction = {(id) => dispatch({type: 'DELETE', data: id})}
-                  ></FlatCardsList>
+                  ></FlatCardsList> */}
               </Container>
             )}
             {

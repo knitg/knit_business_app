@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import UserList from "./UserList";
 import UserDetail from "./UserDetail";
 import AddUser from "./AddUser";
-import KFab from "../../../components/KFab";
+import KFab from "../../../components/fab/KFab";
 import { getUserListAction } from "../../../redux_store/actions/users/crud-user.actions";
 
 

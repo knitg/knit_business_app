@@ -1,18 +1,23 @@
-import React, {useState, useReducer} from "react";
+import React, {useState, useReducer, useEffect} from "react";
 import { View, Text, Container } from "native-base";
 
-import KFab from "../../../components/KFab";
+import KFab from "../../../components/fab/KFab";
 import AddUserType from "./AddUserType";
 import Loader from "../../../components/Loader";
 
 /** REDUX IMPORTS */
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import { getUserTypeListAction, deleteUserTypeAction } from "../../../redux_store/actions/users/crud-user-type.actions";
+import FlatUserCards from "../../../components/card/FlatUserCards";
 
 
 function UserType(props) {
-  
-  
+  useEffect(() => {
+    props.getUserTypeListAction(); 
+
+  }, [props.user_type_id]);
+
   /** INITIAL STATE */
   const initialState = {
     isList: true,
@@ -32,7 +37,7 @@ function UserType(props) {
         return {...state, isNew: true, isList: false, isEdit: false}
       case 'EDIT':
         // setSelectedStitchItem(action.data);
-        // console.log("\n\n\n\n\n EDIT CLICKED ", action);
+        console.log("\n\n\n\n\n EDIT CLICKED ", action);
         // props.getStitchTypeList(); 
         return {...state, isNew: false, isList: false, isEdit: true}
       case 'DELETE':
@@ -48,7 +53,7 @@ function UserType(props) {
 
   return (
     <Container style={{ flex: 1 }}>
-        {/* { props.loading ? <Loader></Loader> :  */}
+        { props.loading ? <Loader></Loader> : 
           <Container>
             {state.isNew || state.isEdit ? (
               <View style={{ height:'100%', borderWidth:1, borderColor:'yellow', borderStyle:'solid'}}>
@@ -58,12 +63,11 @@ function UserType(props) {
               </View>
             ) : (              
               <Container>
-                {/* {props.delete_stitch_id ? props.getStitchList() : null}
-                <FlatCardsList list={props.stitchTypeList} listMethod={props.getStitchTypeList}
+                {/* {props.delete_stitch_id ? props.getStitchList() : null} */}
+                <FlatUserCards list={props.userTypeList} listMethod={props.getUserTypeListAction}
                   editAction={(editData) => dispatch({type: 'EDIT', data: editData})}
                   deleteAction = {(id) => dispatch({type: 'DELETE', data: id})}
-                  ></FlatCardsList> */}
-                  <Text>USER LIST</Text>
+                  ></FlatUserCards> 
 
               </Container>
             )}
@@ -72,24 +76,25 @@ function UserType(props) {
               : dispatch({type: 'ADD'})}></KFab>
             }
           </Container> 
-        {/* } */}
+        }
     </Container>
   );
 }
 
-const mapStateToProps = (state) => { 
+const mapStateToProps = ({userType}) => { 
+  console.log("MAP STATE PROP ", userType);
   return {
-    userTypeList: state,
-    user_type_id: state,
-    loading: state,
-    delete_user_type_id: state
+    userTypeList: userType.usertypeList,
+    user_type_id: userType.user_type_id,
+    loading: userType.loading,
+    // delete_user_type_id: state
   }
 };
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
     {
-      // getUserTypeList: getUserTypeListAction,
-      // deleteUserTypeAction: deleteUserTypeAction
+      getUserTypeListAction: getUserTypeListAction,
+      deleteUserTypeAction: deleteUserTypeAction
     },
     dispatch
   );

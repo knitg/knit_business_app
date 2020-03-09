@@ -2,7 +2,6 @@ import React, { useState, useEffect, useReducer } from "react";
 import { View, Container, Text } from "native-base"; 
 
 /** COMPONENTS IMPORT */
-import KFab from "../../components/KFab";
 import AddStitch from "./AddStitch";
 
 /** REDUX IMPORTS */
@@ -10,9 +9,10 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux"; 
 import Loader from "../../components/Loader";
 import { deleteStitchAction, getStitchListAction } from "../../redux_store/actions/stitch/crud-stitch.actions";
-import FlatCardsList from "../../components/FlatProductCards";
+import FlatCardsList from "../../components/card/FlatProductCards";
 import { PROVIDER_GOOGLE } from "react-native-maps"; 
 import FitToCoordinates from "../../components/KMaps";
+import KFab from "../../components/fab/KFab";
 
 const Stitch = (props) => {
   const createMarker = (lat=this.state.position.latitude,  lng= this.state.position.longitude) => {

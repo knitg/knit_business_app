@@ -2,9 +2,8 @@ import React, { useState, useEffect, useReducer } from "react";
 import { View, Container, Text } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
 
-/** COMPONENTS IMPORT */
-import ProductCard from "../../components/ProductCard";
-import KFab from "../../components/KFab";
+/** COMPONENTS IMPORT */ 
+import KFab from "../../components/fab/KFab";
 
 /** REDUX IMPORTS */
 import { connect } from "react-redux";
@@ -12,8 +11,9 @@ import { bindActionCreators } from "redux";
 import Loader from "../../components/Loader";
 import AddStitchType from "./AddStitchType";
 import { getStitchTypeDesignListAction, deleteStitchTypeDesignAction } from "../../redux_store/actions/stitch/crud-stitch-design.action";
-import FlatCardsList from "../../components/FlatProductCards";
+import FlatCardsList from "../../components/card/FlatProductCards";
 import AddStitchTypeDesign from "./AddStitchTypeDesign";
+import ProductCard from "../../components/card/ProductCard";
 
 const StitchTypeDesign = (props) => {
   useEffect(() => {

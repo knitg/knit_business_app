@@ -19,12 +19,14 @@ const KTextInput = ({label, formikKey, formikProps, style, values, onUpdateValue
         <View style={{ marginHorizontal: 10, marginVertical: 5 }}>
             { label ? (<Text style={{ marginBottom: 3 }}>{label}</Text>) : null }
             
-            <TextInput
+            <TextInput 
                 style={[inputStyles, style]}
                 onChangeText={formikProps.handleChange(formikKey)}
                 onChange = {e => {
                     console.log("ON CHANGE ", e);
-                    onUpdateValue(formikProps.values[formikKey]);
+                    if(onUpdateValue) {
+                        onUpdateValue(formikProps.values[formikKey]);
+                    }
                 }}
                 onBlur={formikProps.handleBlur(formikKey)}
                 value = {formikProps.values[formikKey]}

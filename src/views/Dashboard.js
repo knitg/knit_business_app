@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { View, Text, Tab } from "native-base";
-import HeaderToolBar from "../components/HeaderToolBar";
-import ProductCard from "../components/ProductCard";
+import HeaderToolBar from "../components/HeaderToolBar"; 
 import { SafeAreaView } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import KTabs from "../components/Tabs";

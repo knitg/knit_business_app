@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { View, Container, Text } from "native-base"; 
-import KFab from "../../components/KFab";
+import KFab from "../../components/fab/KFab";
 
 /** REDUX IMPORTS */
 import { connect } from "react-redux";
@@ -8,12 +8,12 @@ import { bindActionCreators } from "redux";
 import Loader from "../../components/Loader";
 import AddStitchType from "./AddStitchType";
 import { deleteStitchTypeAction, getStitchTypeListAction } from "../../redux_store/actions/stitch/crud-stitch-type.action";
-import FlatCardsList from "../../components/FlatProductCards";
+import FlatCardsList from "../../components/card/FlatProductCards";
 
 const StitchType = (props) => { 
   useEffect(() => {
     props.getStitchTypeList();
-  }, [props.delete_stitch_id, props.stitch_type_id]);
+  }, [ props.delete_stitch_id, props.stitch_type_id]);
   
   /** INITIAL STATE */
   const initialState = {

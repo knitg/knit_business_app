@@ -6,6 +6,7 @@ import { H2, View } from "native-base";
 import KTextInput from "../../components/KTextInput"; 
  
 import { addStitchAction, updateStitchAction } from "../../redux_store/actions/stitch/crud-stitch.actions";
+
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";  
 import RN_ImagePicker from "../../components/KImagePicker";

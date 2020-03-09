@@ -26,10 +26,10 @@ const AddStitchType = props => {
   const saveOrUpdateStitch = formData => {
     if (props.selectedStitchItem) {
       console.log("UPDATE SECTION ", props.selectedStitchItem);
-      // props.updateStitchTypeAction(props.selectedStitchItem.id, formData);
+      props.updateStitchTypeAction(props.selectedStitchItem.id, formData);
     } else {
       console.log("ADD SECTION TYPE", props.selectedStitchItem);
-      // props.addStitchService(formData);
+      props.addStitchAction(formData);
     }
     props.cancelClick();
   };
@@ -145,7 +145,7 @@ const mapStateToProps = ({ stitch }) => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      addStitchService: addStitchTypeAction,
+      addStitchAction: addStitchTypeAction,
       updateStitchTypeAction: updateStitchTypeAction
     },
     dispatch

@@ -17,7 +17,7 @@ export const getUserTypeListAction = () => {
         console.log(`${API_HOST}${USER_PFX}${USER_TYPE}`)
         return axios.get(`${API_HOST}${USER_PFX}${USER_TYPE}`)
             .then(response => {
-                console.log(response)
+                console.log("USER TYPE >>> ", response)
                 dispatch(SUCCESS_RESPONSE(CONST_USER.USER_TYPE_LIST, response.data))
             })
             .catch(error => {
