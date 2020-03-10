@@ -10,20 +10,17 @@ import {
   Textarea
 } from "native-base";
 
-import { Formik, Field, FieldArray, useField } from "formik";
+import { Formik } from "formik";
 import { StyleSheet } from "react-native";
 import KPrimaryButton from "../../../components/KPrimaryButton";
 import * as yup from "yup";
 import KTextInput from "../../../components/KTextInput";
-import { TextInput, ScrollView } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import { getUserTypeListAction } from "../../../redux_store/actions/users/crud-user-type.actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import Checkbox from "react-native-modest-checkbox";
 
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { CardCheckBox } from "../../../components/CardCheckBox";
 
 /**
  * Validation schema
@@ -37,14 +34,19 @@ const validationSchema = yup.object().shape({
     .min(2, "Seems a bit short"),
   email: yup
     .string()
+    .oneOf(['phone'], 'phone is requied')
+    .email('Invalid email')
     .required()
-    .label("Email")
-    .min(2, "Seems a bit short"),
+    .label("Email"),
   phone: yup
     .number()
-    .required()
-    .label("Phone")
-    .min(2, "Seems a bit short"),
+    .lessThan(10, 'length shouldnt be lessthan 10 numbers')
+    .when('email', {
+      is: (email) => email && email.length == 0,
+      then: yup.number()
+        .required('Phone number is required')
+        .typeError('Phone Type field is required')
+    }),
   password: yup
     .string()
     .required()
@@ -63,7 +65,7 @@ const validationSchema = yup.object().shape({
 });
 
 function AddUser(props) {
-  const [value, setValue] = React.useState(false);
+  const [step, setStep] = React.useState(0);
 
   const [userType, setUserType] = useState([]);
   useEffect(() => {
@@ -72,13 +74,26 @@ function AddUser(props) {
       console.log("inside return");
     };
   }, [userType]);
+  
+  function gotoNextStep (formikProps) {
+    console.log("BEFORWE", step, formikProps.values);
+    if(step == 0) {
+      if(formikProps.values.user_type.length > 0){
+        setStep(step + 1);
+        console.log(step);
+      }else{
+        formikProps.setFieldTouched('user_type', true, true);
+      }
+    }
 
+    
+  }
   return (
     <Container style={{ flex: 1 }}>
       <View style={styles.container}>
         <ScrollView>
           <H2 style={styles.heading}>
-            {props.isEditMode ? "UPDATE" : "ADD"} User Type
+            {props.isEditMode ? "UPDATE" : "ADD"} User
           </H2>
 
           <Formik
@@ -102,91 +117,54 @@ function AddUser(props) {
               return (
                 <View style={styles.container}>
                   {/* <CheckBox checked={formikProps.values.} color="green"/> */}
-                  {props.userTypeList && props.userTypeList.length > 0
-                    ? props.userTypeList.map((usertype, index) => (
-                        <Checkbox
-                          key={index}
-                          containerStyle={{ marginHorizontal: 30 }}
-                          labelStyle={{ padding: 10 }}
-                          checked={formikProps.values.user_type.includes(
-                            usertype
-                          )}
-                          checkedComponent={
-                            <MaterialCommunityIcons
-                              name="check-all"
-                              size={50}
-                              color="green"
-                            />
-                          }
-                          uncheckedComponent={
-                            <MaterialCommunityIcons
-                              name="checkbox-blank-outline"
-                              size={50}
-                              color={formikProps.errors["user_type"] ? '#FF0000' : '#0564A4'}
-                            />
-                          }
-                          onChange={checked => {
-                            const selectedUserTypes =
-                              formikProps.values.user_type;
-                            if (selectedUserTypes.includes(usertype)) {
-                              selectedUserTypes.splice(
-                                selectedUserTypes.indexOf(usertype),
-                                1
-                              );
-                            } else {
-                              selectedUserTypes.push(usertype);
-                            }
-                            formikProps.setFieldValue(
-                              "user_type",
-                              selectedUserTypes
-                            );
-                          }}
-                          label={usertype.user_type}
+                  { step === 0 ? 
+                  <CardCheckBox userTypeList={props.userTypeList} formikProps={formikProps} ></CardCheckBox>
+                   : ( 
+                     <View>
+                        <KTextInput
+                          placeholder="Username"
+                          formikProps={formikProps}
+                          formikKey="username"
                         />
-                      ))
-                    : null}
-                  {formikProps.touched["user_type"] &&
-                  formikProps.errors["user_type"] ? (
-                    <Text style={{ color: "red" }}>
-                      {formikProps.touched["user_type"] &&
-                        formikProps.errors["user_type"]}
-                    </Text>
-                  ) : null}
+                        <KTextInput
+                          placeholder="Email"
+                          formikProps={formikProps}
+                          formikKey="email"
+                        />
+                        <KTextInput
+                          placeholder="Phone"
+                          formikProps={formikProps}
+                          formikKey="phone"
+                        />
+                        <KTextInput
+                          placeholder="Password"
+                          formikProps={formikProps}
+                          formikKey="password"
+                        />
+                        <Textarea
+                          rowSpan={5}
+                          bordered
+                          placeholder="Textarea"
+                          onChangeText={formikProps.handleChange("description")}
+                          onBlur={formikProps.handleBlur("description")}
+                          value={formikProps.values.description}
+                        />
+                      </View>
+                  )}
 
-                  <KTextInput
-                    placeholder="Username"
-                    formikProps={formikProps}
-                    formikKey="username"
-                  />
-                  <KTextInput
-                    placeholder="Email"
-                    formikProps={formikProps}
-                    formikKey="email"
-                  />
-                  <KTextInput
-                    placeholder="Phone"
-                    formikProps={formikProps}
-                    formikKey="phone"
-                  />
-                  <KTextInput
-                    placeholder="Password"
-                    formikProps={formikProps}
-                    formikKey="password"
-                  />
-                  <Textarea
-                    rowSpan={5}
-                    bordered
-                    placeholder="Textarea"
-                    onChangeText={formikProps.handleChange("description")}
-                    onBlur={formikProps.handleBlur("description")}
-                    value={formikProps.values.description}
-                  />
                   <View style={styles.btn_container}>
+                    {(step === 0 || step === 1)  ? 
+                    <KPrimaryButton
+                      title="NEXT"
+                      onPress={gotoNextStep.bind(this, formikProps)}
+                      style={styles.button}
+                    /> : 
                     <KPrimaryButton
                       title="ADD"
                       onPress={formikProps.handleSubmit}
                       style={styles.button}
                     />
+                    }
                     <KPrimaryButton
                       title="CANCEL"
                       onPress={props.cancelClick}
