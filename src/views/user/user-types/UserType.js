@@ -9,7 +9,7 @@ import Loader from "../../../components/Loader";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { getUserTypeListAction, deleteUserTypeAction } from "../../../redux_store/actions/users/crud-user-type.actions";
-import FlatUserCards from "../../../components/card/FlatUserCards";
+import FlatUserTypeCardList from "../../../components/card/FlatUserTypeCardList";
 
 
 function UserType(props) {
@@ -64,10 +64,10 @@ function UserType(props) {
             ) : (              
               <Container>
                 {/* {props.delete_stitch_id ? props.getStitchList() : null} */}
-                <FlatUserCards list={props.userTypeList} listMethod={props.getUserTypeListAction}
+                <FlatUserTypeCardList list={props.userTypeList} listMethod={props.getUserTypeListAction}
                   editAction={(editData) => dispatch({type: 'EDIT', data: editData})}
                   deleteAction = {(id) => dispatch({type: 'DELETE', data: id})}
-                  ></FlatUserCards> 
+                  ></FlatUserTypeCardList> 
 
               </Container>
             )}

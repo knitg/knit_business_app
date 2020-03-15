@@ -12,6 +12,7 @@ const tabs = [
   { id: 3, type: "User Role", code: "user_role" }
 ];
 const ScreenByCode = code => {
+  console.log("SCREEEN BY CIDE ", code);
   switch (code) {
     case "add_user":
       return <User />;

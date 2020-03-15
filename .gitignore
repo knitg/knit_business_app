@@ -11,6 +11,8 @@ web-build/
 web-report/
 android/app/build/*
 
+android/.gradle/*
+
 # macOS
 .DS_Store
 node_modules

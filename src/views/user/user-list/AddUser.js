@@ -21,6 +21,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
 import { CardCheckBox } from "../../../components/CardCheckBox";
+import { addUserAction, updateUserAction } from "../../../redux_store/actions/users/crud-user.actions";
 
 /**
  * Validation schema
@@ -32,20 +33,19 @@ const validationSchema = yup.object().shape({
     .required()
     .label("User Name")
     .min(2, "Seems a bit short"),
-  email: yup
-    .string()
-    .oneOf(['phone'], 'phone is requied')
-    .email('Invalid email')
-    .required()
-    .label("Email"),
   phone: yup
     .number()
-    .lessThan(10, 'length shouldnt be lessthan 10 numbers')
-    .when('email', {
-      is: (email) => email && email.length == 0,
-      then: yup.number()
-        .required('Phone number is required')
-        .typeError('Phone Type field is required')
+    .required()
+    .label("Email")
+    .min(10, "Seems a bit short"),
+  email: yup
+    .string() 
+    .email('Invalid email')
+    .when('phone', {
+      is: (phone) => phone && phone.length == 0,
+      then: yup.string().email()
+        .required('Email is required')
+        .typeError('Email is required')
     }),
   password: yup
     .string()
@@ -54,9 +54,9 @@ const validationSchema = yup.object().shape({
     .min(2, "Seems a bit short"),
   user_type: yup
     .array()
-    .required()
-    .label("User Type")
-    .min(1, "Seems a bit short"),
+    .default([])
+    .notRequired()
+    .label("User Type"),
   user_role: yup
     .array()
     .nullable()
@@ -67,26 +67,65 @@ const validationSchema = yup.object().shape({
 function AddUser(props) {
   const [step, setStep] = React.useState(0);
 
-  const [userType, setUserType] = useState([]);
-  useEffect(() => {
-    props.getUserTypeListAction();
-    return () => {
-      console.log("inside return");
-    };
-  }, [userType]);
-  
+  const [userType, setUserType] = useState(null);
+
+  /**
+   * Prepare Form Data here..
+   */
+  const prepareFormData = values => {
+    let formData = new FormData();
+    const userTypeArr  = values.user_type.map((val, i) => val.id);
+    console.log("userTypeArr >>> ", userTypeArr );
+    formData.append("username", values.username);
+    formData.append("email", values.email);
+    formData.append("phone", values.phone);
+    formData.append("password", values.password);
+    formData.append("user_type", userTypeArr.toString());
+    formData.append("user_role", values.user_role);
+    return formData;
+  };
+  /**
+   * Save Or Update action triggers
+   * @param {*} formData - formData
+   */
+  const saveOrUpdateUser = async (formData) => {
+    let actionDone;
+    if (props.selectedUser) {
+      console.log("UPDATE SECTION ", props.selectedUser);
+      actionDone = await props.updateUserAction(props.selectedUser.id, formData);
+    } else {
+      console.log("ADD SECTION ", formData);
+      actionDone = await props.addUserAction(formData);
+      console.log("ACTION DONE 2", actionDone);
+    }
+    console.log("ACTION DONE 3", actionDone);
+    if(props.user_id){
+      props.cancelClick();
+    }
+  };
+
   function gotoNextStep (formikProps) {
-    console.log("BEFORWE", step, formikProps.values);
+    formikProps.handleSubmit();
     if(step == 0) {
-      if(formikProps.values.user_type.length > 0){
+      const keys = Object.keys(formikProps.errors);
+      console.log("KEYYYYYYYSSSSS" , keys);
+      if(keys.length > 0){
         setStep(step + 1);
         console.log(step);
       }else{
-        formikProps.setFieldTouched('user_type', true, true);
+        // formikProps.setFieldTouched('user_type', true, true);
       }
     }
-
-    
+  }
+  const errorObjects = (obj) => {
+    const errors = [];
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          console.log(key, obj[key]);
+          errors.push(<Text>{obj[key]}</Text>);
+        }
+    }
+    return errors;
   }
   return (
     <Container style={{ flex: 1 }}>
@@ -98,28 +137,26 @@ function AddUser(props) {
 
           <Formik
             initialValues={{
-              username: "",
-              email: "",
-              phone: "",
-              password: "",
+              username: props.selectedUser ? props.selectedUser.username : "",
+              phone: props.selectedUser ? props.selectedUser.phone : "",
+              email: props.selectedUser ? props.selectedUser.email : "",
+              password: props.selectedUser ? props.selectedUser.password : "",
               user_type: [],
-              user_role: null,
+              user_role: 'ADMIN',
               images: []
             }}
-            onSubmit={(values, actions) => {
-              console.log("submit clickedddddd", values, actions);
-              // onSubmitStitch(values, actions);
+            onSubmit={(values, actions, errors) => {
+              console.log("submit clickedddddd >>> ", values, actions, errors);
+              const formData = prepareFormData(values);
+              saveOrUpdateUser(formData);
             }}
             validationSchema={validationSchema}
           >
             {formikProps => {
               console.log("formikProps", formikProps);
               return (
-                <View style={styles.container}>
-                  {/* <CheckBox checked={formikProps.values.} color="green"/> */}
-                  { step === 0 ? 
-                  <CardCheckBox userTypeList={props.userTypeList} formikProps={formikProps} ></CardCheckBox>
-                   : ( 
+                <View style={styles.container}> 
+                  { step === 0 ? ( 
                      <View>
                         <KTextInput
                           placeholder="Username"
@@ -127,20 +164,20 @@ function AddUser(props) {
                           formikKey="username"
                         />
                         <KTextInput
-                          placeholder="Email"
-                          formikProps={formikProps}
-                          formikKey="email"
-                        />
-                        <KTextInput
                           placeholder="Phone"
                           formikProps={formikProps}
                           formikKey="phone"
                         />
                         <KTextInput
+                          placeholder="Email"
+                          formikProps={formikProps}
+                          formikKey="email"
+                        />
+                        {!(props.selectedUser && props.selectedUser.password) ? (<KTextInput
                           placeholder="Password"
                           formikProps={formikProps}
                           formikKey="password"
-                        />
+                        />) : null}
                         <Textarea
                           rowSpan={5}
                           bordered
@@ -150,21 +187,29 @@ function AddUser(props) {
                           value={formikProps.values.description}
                         />
                       </View>
-                  )}
+                  ) : 
+                  (<CardCheckBox userTypeList={props.userTypeList} formikProps={formikProps} ></CardCheckBox>)                  
+                  }
 
                   <View style={styles.btn_container}>
-                    {(step === 0 || step === 1)  ? 
+                  <KPrimaryButton title={props.selectedUser ? "UPDATE" : "ADD" } 
+                      onPress={formikProps.handleSubmit} 
+                      style={styles.button} 
+
+                      />
+               
+                    {/* {(step === 0)  ? 
                     <KPrimaryButton
                       title="NEXT"
                       onPress={gotoNextStep.bind(this, formikProps)}
                       style={styles.button}
                     /> : 
                     <KPrimaryButton
-                      title="ADD"
+                      title={props.selectedUser ? "UPDATE" : "ADD"}
                       onPress={formikProps.handleSubmit}
                       style={styles.button}
                     />
-                    }
+                    } */}
                     <KPrimaryButton
                       title="CANCEL"
                       onPress={props.cancelClick}
@@ -207,18 +252,18 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ userType }) => {
-  console.log("MAP STATE PROP ", userType);
+const mapStateToProps = ({ user }) => {
+  console.log("MAP STATE PROP ", user);
   return {
-    userTypeList: userType.usertypeList,
-    loading: userType.loading
+    user_id: user
     // delete_user_type_id: state
   };
 };
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      getUserTypeListAction: getUserTypeListAction
+      addUserAction: addUserAction,
+      updateUserAction: updateUserAction,
     },
     dispatch
   );

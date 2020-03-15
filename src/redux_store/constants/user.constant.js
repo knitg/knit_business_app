@@ -1,5 +1,7 @@
 export const CONST_USER = {
 
+    USER_RESPONSE : 'USER_RESPONSE',
+
     /** LIST CONSTANTS */
     USER_LIST : 'USER_LIST',
     USER_TYPE_LIST: 'USER_TYPE_LIST',

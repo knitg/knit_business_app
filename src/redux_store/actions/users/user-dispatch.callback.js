@@ -21,3 +21,10 @@ export const ERROR_RESPONSE = (actionType, error) => {
     };
 };
  
+export const USER_STATUS = (actionType, data) => {
+    return {
+        type: actionType,
+        data
+    };
+};
+ 

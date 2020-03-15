@@ -8,7 +8,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ImageSwiper from "../ImageSwiper";
 
 
-const FlatUserCards = (props) => {
+const FlatUserCardList = (props) => {
 
     const [refreshing, setRefreshing] = useState(false);
 
@@ -25,30 +25,26 @@ const FlatUserCards = (props) => {
         props.editAction(selected);
     }
     const deleteActionItem = (selected) => {
+        console.log("flat user card delete ", selected);
         props.deleteAction(selected.id);
     }
     return (
         <SafeAreaView style={{flex: 1}}>
             <FlatList
               data={props.list}
-              renderItem={({ item }) => {
-                  console.log("INSIDE RENDER", item);
+              renderItem={({ item }) => { 
                 const images = [];
                 if(item.images && item.images.length >= 1){
                     item.images.forEach(obj => {
                     images.push(obj.image);
                     });
                 }
-                // return <ProductCard listItems={props.list} key={item.id} type={item} images={images}
-                //                 editIconClick={() => editActionItem(item)}
-                //                 trashIconClick={() => deleteActionItem(item)}
-                //         ></ProductCard>
                 return (<Card>
                             <CardItem>
                                 <Left>
                                 <Body>
-                                    <Text>{item.user_type}</Text>
-                                    <Text note>{item.description}</Text>
+                                    <Text>{item.username}</Text>
+                                    <Text note>{item.phone}</Text>
                                 </Body>
                                 </Left>
                                 <Right>
@@ -58,7 +54,7 @@ const FlatUserCards = (props) => {
                                         onPress={props.editIcon}
                                     />
                                     </TouchableHighlight>
-                                    <TouchableHighlight onPress={props.deleteAction}>
+                                    <TouchableHighlight onPress={() => deleteActionItem(item)}>
                                     <FontAwesome style={{ padding: 10, alignSelf: 'center' }} name="trash" size={32} color="red" />
                                     </TouchableHighlight>
                                 </View>
@@ -82,4 +78,4 @@ const FlatUserCards = (props) => {
     )
 }
 
-export default FlatUserCards;
+export default FlatUserCardList;
