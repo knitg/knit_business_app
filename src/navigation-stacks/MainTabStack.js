@@ -6,7 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import Profile from "../views/Profile";
-import Vendor from "../views/Vendor";
+import VendorView from "../views/VendorView";
 import StitchView from "../views/StitchView";
 import UserView from "../views/UserView";
 
@@ -41,7 +41,7 @@ const MainTabStack = createBottomTabNavigator({
     }
   },
   Vendors: {
-    screen: Vendor,
+    screen: VendorView,
     navigationOptions: {
       tabBarLabel: "Vendors",
       tabBarIcon: () => (
@@ -60,7 +60,7 @@ const MainTabStack = createBottomTabNavigator({
   }
 },
 {
-  initialRouteName: "User"  
+  initialRouteName: "Vendors"  
 });
 
 export default MainTabStack;

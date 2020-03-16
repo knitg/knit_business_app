@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { API_HOST, USER_PFX, VENDOR } from 'react-native-dotenv' 
+import { API_HOST, USER_PFX, USER_TYPE, VENDOR } from 'react-native-dotenv' 
 import { alert } from '../../../core/utils/alert';
 
 /**DISPATCH CALLBACKS */
 import { 
-    LOADING, SUCCESS_RESPONSE, ERROR_RESPONSE 
-} from '../users/user-dispatch.callback';
+    LOADING, SUCCESS_RESPONSE, ERROR_RESPONSE, VENDOR_STATUS
+} from '../../actions/vendor/vendor-dispatch.callback';
 import { CONST_VENDOR } from '../../constants/vendor.constant';
 
 /***
@@ -13,16 +13,24 @@ import { CONST_VENDOR } from '../../constants/vendor.constant';
  */
 export const getVendorListAction = () => {
     return (dispatch, getState) => {
+        
         dispatch(LOADING(true));
-        console.log(`${API_HOST}${USER_PFX}${VENDOR}`)
+        dispatch(VENDOR_STATUS(CONST_VENDOR.VENDOR_UPDATE, null))
+        dispatch(VENDOR_STATUS(CONST_VENDOR.VENDOR_ADD, null))
+        dispatch(VENDOR_STATUS(CONST_VENDOR.VENDOR_DELETE, null))
+        console.log(`API HOST ---- ${API_HOST}${USER_PFX}${VENDOR}`)
+        dispatch(SUCCESS_RESPONSE(CONST_VENDOR.VENDOR_LIST, []))
         return axios.get(`${API_HOST}${USER_PFX}${VENDOR}`)
             .then(response => {
-                console.log(response)
+                console.log(response);
                 dispatch(SUCCESS_RESPONSE(CONST_VENDOR.VENDOR_LIST, response.data))
+                return response.data;
             })
             .catch(error => {
                 dispatch(ERROR_RESPONSE(CONST_VENDOR.VENDOR_LIST_ERR, error))
                 console.log(error);
+                return error;
+
             }).finally(() => {
                 dispatch(LOADING(false));
             });

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_HOST, USER_PFX, USER, LOGIN } from 'react-native-dotenv' 
+import { API_HOST, USER_PFX, LOGIN } from 'react-native-dotenv' 
 import { alert } from '../../../core/utils/alert';
 
 /**DISPATCH CALLBACKS */

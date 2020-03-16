@@ -6033,6 +6033,14 @@ react-native-picker-select@^6.3.4:
   dependencies:
     lodash.isequal "^4.5.0"
 
+react-native-progress-steps@^1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/react-native-progress-steps/-/react-native-progress-steps-1.2.9.tgz#3a3bff8f330c14bbd7cd9333c9c760079bdb057f"
+  integrity sha512-sq83DRMuCcQOBiH5FiEzJ/FkQou3VyZ6w2QnecVOV8B6lZG2rb+IwfNaDN3j/fWvVsuHistCel1/9de0R7B0lA==
+  dependencies:
+    lodash "^4.17.11"
+    prop-types "^15.6.2"
+
 react-native-reanimated@^1.4.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.7.0.tgz#896db2576552ac59d288a1f6c7f00afc171f240c"

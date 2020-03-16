@@ -2,7 +2,7 @@ import { CONST_USER } from "../../constants/user.constant";
 
 const initialState = {};
 
-export default userTypeReducer = (state = initialState, action) => {
+export default userReducer = (state = initialState, action) => {
   switch (action.type) {
     case CONST_USER.USER_LOADING:
       const loading = action.loading

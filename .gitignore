@@ -11,7 +11,7 @@ web-build/
 web-report/
 android/app/build/*
 
-android/.gradle/*
+android\.gradle\4.10.1\*
 
 # macOS
 .DS_Store
