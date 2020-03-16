@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { View, Text, Container, H2, Textarea } from "native-base";
 
 import { Formik } from "formik";
@@ -60,8 +60,12 @@ const validationSchema = yup.object().shape({
 });
 
 function AddVendor(props) {
-  const [step, setStep] = React.useState(0);
-
+  // const [step, setStep] = React.useState(0);
+  /** INITIAL STATE */
+  const [createUserErrors, setCreateUserErrors] = useState(false);
+  const [userTypeErrors, setUserTypeErrors] = useState(false);
+  const [userInfoErrors, setUserInfoErrors] = useState(false);
+   
   const [userType, setUserType] = useState(null);
 
   /**
@@ -112,15 +116,18 @@ function AddVendor(props) {
     }
     return errors;
   };
-  const onUserTypeNext = () => {
+  const onCreatedUserNext = () => {
     console.log("ON NEXTTTTTTTT");
+    setCreateUserErrors(true);
   };
 
-  const onUserSelectedNext = () => {
-    console.log("ON USER SELECTED NEXTTTTTTTT");
+  const onUserTypeNext = () => {    
+    setUserTypeErrors(true);
   };
 
   const onVendorCreated = () => {
+    setUserInfoErrors(true);
+
     console.log("ON VENDOR CREATED NEXTTTTTTTT");
   };
 
@@ -153,59 +160,60 @@ function AddVendor(props) {
               return (
                 <View style={{ flex: 1 }}>
                   <ProgressSteps>
-                    <ProgressStep
-                      label="Create User"
-                      onNext={onUserTypeNext}
-                      nextBtnTextStyle={buttonTextStyle}
-                      previousBtnTextStyle={buttonTextStyle}
-                    >
-                      <View>
-                        <KTextInput
-                          placeholder="Username"
-                          formikProps={formikProps}
-                          formikKey="username"
-                        />
-                        <KTextInput
-                          placeholder="Phone"
-                          formikProps={formikProps}
-                          formikKey="phone"
-                        />
-                        <KTextInput
-                          placeholder="Email"
-                          formikProps={formikProps}
-                          formikKey="email"
-                        />
-                        {!(
-                          props.selectedUser && props.selectedUser.password
-                        ) ? (
+                      <ProgressStep
+                        label="Create User"
+                        onNext={onCreatedUserNext}
+                        errors = {createUserErrors}
+                        nextBtnTextStyle={buttonTextStyle}
+                        previousBtnTextStyle={buttonTextStyle}
+                      >
+                        <View>
                           <KTextInput
-                            placeholder="Password"
+                            placeholder="Username"
                             formikProps={formikProps}
-                            formikKey="password"
+                            formikKey="username"
                           />
-                        ) : null}
-                        <Textarea
-                          rowSpan={5}
-                          bordered
-                          placeholder="Textarea"
-                          onChangeText={formikProps.handleChange("description")}
-                          onBlur={formikProps.handleBlur("description")}
-                          value={formikProps.values.description}
-                        />
-                      </View>
-                    </ProgressStep>
-                    <ProgressStep
-                      label="User Type"
-                      onNext={onUserSelectedNext}
-                      nextBtnTextStyle={buttonTextStyle}
-                      previousBtnTextStyle={buttonTextStyle}
-                    >
-                      <CardCheckBox
-                        userTypeList={props.userTypeList}
-                        formikProps={formikProps}
-                      ></CardCheckBox>
-                    </ProgressStep>
-                    <ProgressStep
+                          <KTextInput
+                            placeholder="Phone"
+                            formikProps={formikProps}
+                            formikKey="phone"
+                          />
+                          <KTextInput
+                            placeholder="Email"
+                            formikProps={formikProps}
+                            formikKey="email"
+                          />
+                          {!(
+                            props.selectedUser && props.selectedUser.password
+                          ) ? (
+                            <KTextInput
+                              placeholder="Password"
+                              formikProps={formikProps}
+                              formikKey="password"
+                            />
+                          ) : null}
+                          <Textarea
+                            rowSpan={5}
+                            bordered
+                            placeholder="Textarea"
+                            onChangeText={formikProps.handleChange("description")}
+                            onBlur={formikProps.handleBlur("description")}
+                            value={formikProps.values.description}
+                          />
+                        </View>
+                      </ProgressStep>
+                      <ProgressStep
+                        label="User Type"
+                        onNext={onUserTypeNext}
+                        nextBtnTextStyle={buttonTextStyle}
+                        previousBtnTextStyle={buttonTextStyle}
+                      >
+                        <CardCheckBox
+                          userTypeList={props.userTypeList}
+                          formikProps={formikProps}
+                        ></CardCheckBox>
+                      </ProgressStep>
+                      <ProgressStep
                       label="User Info"
                       onSubmit={onVendorCreated}
                       nextBtnTextStyle={buttonTextStyle}
